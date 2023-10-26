@@ -1,0 +1,19 @@
+{
+  "name": "entrega-coder15",
+  "version": "1.0.0",
+  "description": "Entrega Coder House - Práctica de integración",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon src/app.js"
+  },
+  "keywords": [],
+  "author": "Evelyn Alvarenga",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-handlebars": "^7.1.2",
+    "mongoose": "^7.6.3",
+    "socket.io": "^4.7.2"
+  }
+}

@@ -1,0 +1,83 @@
+[
+    {
+        "id": 1,
+        "title": "IPhone 12",
+        "description": "IPhone 12 APPLE",
+        "price": 456.99,
+        "thumbnail": "https://www.macstation.com.ar/img/productos/2492-2317-1.jpg",
+        "code": 1,
+        "stock": 231
+    },
+    {
+        "id": 2,
+        "title": "IPhone 6",
+        "description": "IPhone 6 APPLE",
+        "price": 431.99,
+        "thumbnail": "https://www.macstation.com.ar/img/productos/2492-2317-1.jpg",
+        "code": 1,
+        "stock": 231
+    },
+    {
+        "id": 3,
+        "title": "IPhone 14 PRO",
+        "description": "IPhone 14 PRO APPLE",
+        "price": 536.12,
+        "thumbnail": "https://www.macstation.com.ar/img/productos/2492-2317-1.jpg",
+        "code": 1,
+        "stock": 231
+    },
+    {
+        "id": 4,
+        "title": "IPhone 13",
+        "description": "IPhone 13 APPLE",
+        "price": 412.99,
+        "thumbnail": "https://www.macstation.com.ar/img/productos/2492-2317-1.jpg",
+        "code": 1,
+        "stock": 231
+    },
+    {
+        "id": 5,
+        "title": "IPhone 15",
+        "description": "IPhone 15 APPLE",
+        "price": 2000.11,
+        "thumbnail": "https://www.macstation.com.ar/img/productos/2492-2317-1.jpg",
+        "code": 1,
+        "stock": 231
+    },
+    {
+        "id": 6,
+        "title": "IPhone 14 SE",
+        "description": "IPhone 14 SE APPLE",
+        "price": 231.99,
+        "thumbnail": "https://www.macstation.com.ar/img/productos/2492-2317-1.jpg",
+        "code": 1,
+        "stock": 231
+    },
+    {
+        "id": 7,
+        "title": "IPhone 11",
+        "description": "IPhone 11 APPLE",
+        "price": 234.99,
+        "thumbnail": "https://www.macstation.com.ar/img/productos/2492-2317-1.jpg",
+        "code": 1,
+        "stock": 231
+    },
+    {
+        "id": 8,
+        "title": "IPhone 8",
+        "description": "IPhone 8 APPLE",
+        "price": 312.99,
+        "thumbnail": "https://www.macstation.com.ar/img/productos/2492-2317-1.jpg",
+        "code": 1,
+        "stock": 231
+    },
+    {
+        "id": 9,
+        "title": "IPhone 12 PRO",
+        "description": "IPhone 12 PRO APPLE",
+        "price": 562.99,
+        "thumbnail": "https://www.macstation.com.ar/img/productos/2492-2317-1.jpg",
+        "code": 1,
+        "stock": 231
+    }
+]
