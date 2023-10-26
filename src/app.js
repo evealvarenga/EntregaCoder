@@ -6,8 +6,9 @@ import { engine } from 'express-handlebars';
 import { __dirname } from './utils.js';
 import { Server } from 'socket.io';
 import ProductManager from './manager/ProductManager.js';
+import "./db/configDB.js"
 
-const manager = new ProductManager('./src/productos.json');
+const manager = new ProductManager();
 
 const app = express();
 app.use(express.json());
