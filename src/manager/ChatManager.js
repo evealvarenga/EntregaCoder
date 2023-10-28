@@ -1,4 +1,4 @@
-import { messageModel } from "../db/models/chat.model";
+import { messageModel } from "../db/models/chat.model.js";
 
 class ChatManager {
     async findAll() {
