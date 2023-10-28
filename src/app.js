@@ -6,6 +6,7 @@ import { engine } from 'express-handlebars';
 import { __dirname } from './utils.js';
 import { Server } from 'socket.io';
 import ProductManager from './manager/ProductManager.js';
+import { chatManager } from './manager/chatManager.js';
 import "./db/configDB.js"
 
 const manager = new ProductManager();
@@ -28,19 +29,9 @@ app.use("/api/views", viewsRouter);
 const httpServer = app.listen(8080, () => {console.log(`Servidor escuchando en el puerto 8080`);});
 const socketServer = new Server(httpServer);
 socketServer.on('connection', (socket)=> {
-	console.log('cliente conectado')
-	try {
-		socket.on('product', async (product)  => {
-			await manager.addProduct(product)
-		})
-	} catch (error) {
-		return error
-	}
-	try {
-		socket.on('id', async (id)  => {
-			await manager.deleteProduct(+id)
-		})
-	} catch (error) {
-		return error
-	}
-})
+	socket.on("newMessage", async(message) =>{
+		await chatManager.newOne(message)
+		const messages = await chatManager.findAll()
+		socketServer.emit("sendMessage", messages);
+	});
+});
