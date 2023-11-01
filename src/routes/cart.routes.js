@@ -1,25 +1,22 @@
 import { Router } from "express";
-import CartManager from '../manager/CartManager.js';
+import { cartManager } from "../manager/CartManager.js";
 
-const manager = new CartManager();
 const router = Router();
 
-
-//Endpoint para crear un nuevo carrito
 router.post('/', async (req, res) => {
     try {
-        const cart = await manager.addCart();
+        const cart = await cartManager.addCart();
         return res.status(200).json({cart});
     } catch (error) {
         res.status(500).json({ error: 'Hubo un error al obtener los productos del carrito.' });
     }
 });
  
-//Endpoint para obtener productos del carrito
+
 router.get('/:cid', async (req, res) => {
     try {
         const { cid } = req.params;
-        const cart = await manager.getCartByID(+cid);
+        const cart = await cartManager.getCartByID(+cid);
         if (!cart) {
             return res.status(404).json({message: "Carrito no encontrado."});
         } 
@@ -29,11 +26,11 @@ router.get('/:cid', async (req, res) => {
     }
 });
  
-//Endpoint para agregar un producto al carrito
+
 router.post('/:cid/product/:pid', async (req, res) => {
     try {
         const { cid, pid } = req.params;
-        const response = await manager.addProductToCart(cid, pid);
+        const response = await cartManager.addProductToCart(cid, pid);
         res.status(200).json({message:"Productos agregados al carrito", Carrito: response})
     } catch (error) {
         res.status(500).json({ error: 'Hubo un error al agregar el producto al carrito.' });
