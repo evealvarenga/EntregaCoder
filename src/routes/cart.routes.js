@@ -9,7 +9,7 @@ const router = Router();
 router.post('/', async (req, res) => {
     try {
         const cart = await manager.addCart();
-        return res.status(200).json({message: "Carrito creado.", cart});
+        return res.status(200).json({cart});
     } catch (error) {
         res.status(500).json({ error: 'Hubo un error al obtener los productos del carrito.' });
     }
@@ -17,8 +17,8 @@ router.post('/', async (req, res) => {
  
 //Endpoint para obtener productos del carrito
 router.get('/:cid', async (req, res) => {
-    const { cid } = req.params;
     try {
+        const { cid } = req.params;
         const cart = await manager.getCartByID(+cid);
         if (!cart) {
             return res.status(404).json({message: "Carrito no encontrado."});
@@ -31,10 +31,9 @@ router.get('/:cid', async (req, res) => {
  
 //Endpoint para agregar un producto al carrito
 router.post('/:cid/product/:pid', async (req, res) => {
-    const { cid, pid } = req.params;
-    const { quantity } = req.body;
     try {
-        const response = await manager.addProductToCart(req.params, req.body);
+        const { cid, pid } = req.params;
+        const response = await manager.addProductToCart(cid, pid);
         res.status(200).json({message:"Productos agregados al carrito", Carrito: response})
     } catch (error) {
         res.status(500).json({ error: 'Hubo un error al agregar el producto al carrito.' });

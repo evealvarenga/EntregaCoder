@@ -5,11 +5,8 @@ import viewsRouter from './routes/views.routes.js';
 import { engine } from 'express-handlebars';
 import { __dirname } from './utils.js';
 import { Server } from 'socket.io';
-import ProductManager from './manager/ProductManager.js';
 import { chatManager } from './manager/chatManager.js';
 import "./db/configDB.js"
-
-const manager = new ProductManager();
 
 const app = express();
 app.use(express.json());
@@ -23,12 +20,12 @@ app.set('view', __dirname + "/views");
 //Routes
 app.use("/api/products", productRouter); 
 app.use("/api/cart", cartRouter);
-app.use("/api/views", viewsRouter);
+app.use("/", viewsRouter);
 
 //SocketServer
 const httpServer = app.listen(8080, () => {console.log(`Servidor escuchando en el puerto 8080`);});
 const socketServer = new Server(httpServer);
-socketServer.on('connection', (socket)=> {
+socketServer.on("connection", (socket)=> {
 	socket.on("newMessage", async(message) =>{
 		await chatManager.newOne(message)
 		const messages = await chatManager.findAll()
