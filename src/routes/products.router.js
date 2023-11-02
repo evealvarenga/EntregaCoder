@@ -5,8 +5,8 @@ const router = Router();
 
 router.get('/', async (req, res) => {
     try {
-        const products = await productManager.findAll();
-        res.status(200).json({ message: "Productos encontrados", products });
+        const products = await productManager.findAll(req.query);
+        res.status(200).json({ products });
     } catch (error) {
         res.status(500).json({ message: 'Hubo un error al obtener los productos.' });
     }
