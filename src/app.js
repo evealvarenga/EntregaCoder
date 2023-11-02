@@ -6,9 +6,11 @@ import { engine } from 'express-handlebars';
 import { __dirname } from './utils.js';
 import { Server } from 'socket.io';
 import { chatManager } from './manager/chatManager.js';
+import { productManager } from './manager/ProductManager.js';
 import "./db/configDB.js"
 
 const app = express();
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
 app.use(express.static(__dirname + "/public"));
@@ -32,3 +34,8 @@ socketServer.on("connection", (socket)=> {
 		socketServer.emit("sendMessage", messages);
 	});
 });
+
+socket.on("showProducts", async() => {
+    const products = await productManager.findAll({limit:10, page:1, sort:{}, query:{} })
+    socketServer.emit("sendProducts", products);
+  });
