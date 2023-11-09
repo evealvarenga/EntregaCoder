@@ -31,16 +31,16 @@ class CartManager {
         return cart.save();
     }
 
-    async deleteProductOfCart(idCart,idProduct){
+    async deleteProductOfCart(idCart, idProduct) {
         const cart = await cartsModel.findById(idCart);
-        if(!cart){
-          return("No encontamos el carrito indicado.")
+        if (!cart) {
+            return ("No encontamos el carrito indicado.")
         }
         const productIndex = cart.products.findIndex((p) => p.product.equals(idProduct))
-        if (productIndex === -1){
-          return("No encontamos el producto indicado.")
-        } else{
-          cart.products.splice(productIndex,1)
+        if (productIndex === -1) {
+            return ("No encontamos el producto indicado.")
+        } else {
+            cart.products.splice(productIndex, 1)
         }
         return cart.save();
     }
@@ -65,10 +65,10 @@ class CartManager {
         return cart.save()
     }
 
-    async deleteCartProducts(idCart){
+    async deleteCartProducts(idCart) {
         const cart = await cartsModel.findById(idCart);
-        if(!cart){
-          return("No encontamos el carrito indicado.")
+        if (!cart) {
+            return ("No encontamos el carrito indicado.")
         }
         cart.products = []
         return cart.save();
