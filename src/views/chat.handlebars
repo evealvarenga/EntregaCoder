@@ -1,11 +1,25 @@
 <h3>CHAT</h3>
-<h4 id="name"></h4>
-<div id="chat" style="border: 1px solid;"></div>
+<h2 >Bienvenido</h2>
+<h2 id="name"></h2>
+
 <form id="chatForm">
-    <input type="text" id="user" placeholder="Nombre">
-    <input type="text" name="message" id="message" placeholder="Mensaje">
-    <input type="submit" value="SEND">
+
+  Mail:
+  <input type="email" name="emailUser" id="emailUser" /><br>
+  Mensaje:
+  <input type="text" name="message" id="message" /><br>
+  <input type="submit" value="ENVIAR" />
+
 </form>
 
+<div id="chatContainer"></div>
+
+
+
+<script
+  type="text/javascript"
+  src="https://cdn.jsdelivr.net/npm/toastify-js"
+></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/chat.js"></script>

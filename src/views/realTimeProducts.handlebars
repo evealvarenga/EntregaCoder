@@ -1,19 +1,53 @@
-<form id="form-rtpAdd">
-    Titulo: <input id="title" type="text">
-    Descripción: <input id="description" type="text">
-    Codigo: <input id="code" type="number">
-    Precio: <input id="price" type="number">
-    Stock: <input id="stock" type="number">
-    Thumbnail: <input id="thumbnail" type="text">
-    <button type="submit" value="Agregar">Agregar producto</button>
+
+<h2>Agregar producto</h2><br><br>
+<form id="Form agregar producto">
+
+  Titulo:
+  <input type="string" name="title" id="title" /> <br>
+
+  Descripción:
+  <input type="string" name="description" id="description" /><br>
+
+  Status:
+  <input type="boolean" name="status" id="status" /><br>
+
+  Precio:
+  <input type="number" name="price" id="price" /><br>
+
+  Código:
+  <input type="string" name="code" id="code" /><br>
+
+  Stock:
+  <input type="number" name="stock" id="stock" /><br>
+
+  Thumbnails:
+  <input type="string" name="thumbnails" id="thumbnails" /><br>
+
+  <input type="submit" value="ENVIAR" />
+
 </form>
 
-<form id="form-rtpDelete">
-    ID:<input id="idDelete" placeholder="id" type="number">
-    <button type="submit" value="Eliminar">Eliminar producto</button>
+<br></br>
+
+<h2>Eliminar producto</h2><br><br>
+<form id="Form delete product">
+
+  Title:
+  <input type="string" name="title" id="titleDelete" /><br>
+
+  Id:
+  <input type="string" name="Id" id="idDelete" /><br>
+
+  <input type="submit" value="ENVIAR PRODUCTO A ELIMINAR" />
+
 </form>
 
+<br></br>
+
+<h2>Lista de productos</h2>
+<div id="divRealTimeProduct">
+
+</div>
 
 <script src="/socket.io/socket.io.js"></script>
-<script src="../public/js/index.js"></script>
-
+<script src="/js/index.js"></script>

@@ -1,11 +1,16 @@
-<h2>Products</h2>
 
-<h2>¡Bienvenido, {{user}}!</h2>
-<ul>
-    {{#each products}}
-    <li>{{name}}</li>
-    <li>{{price}}</li>
-    <li>{{stock}}</li>
-    <li>{{description}}</li>
-    {{/each}}
-</ul>
+<h3>¡Bienvenid@ {{user.name}}!</h3>
+<botoom> <a href="/api/sessions/signout"> Cerrar sesión</a> </botoom>
+
+{{#each productsData}}
+  <h2>{{title}}</h2>
+  <p>{{description}}</p>
+  <p> $:{{price}}</p>
+  <p> Código:{{code}}</p>
+  <p> Stock:{{stock}}</p>
+  <p> {{thumbnails}}</p>
+  <p> {{_id}}</p>
+{{/each}}
+
+
+

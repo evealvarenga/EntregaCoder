@@ -1,59 +1,80 @@
-import express from 'express';
-import productRouter from './routes/products.router.js';
-import cartRouter from './routes/cart.routes.js';
-import viewsRouter from './routes/views.routes.js';
-import userRouter from './routes/users.routes.js';
-import sessionsRouter from './routes/session.routes.js';
-import { engine } from 'express-handlebars';
-import { __dirname } from './utils.js';
-import { Server } from 'socket.io';
-import { chatManager } from './manager/chatManager.js';
-import { productManager } from './manager/ProductManager.js';
-import session from 'express-session';
-import MongoStore from 'connect-mongo';
-import cookieParser from 'cookie-parser';
+import express from "express";
+import { engine } from "express-handlebars";
+import { __dirname } from "./utils.js";
+import { Server } from "socket.io";
+import MongoStore  from "connect-mongo";
+import cookieParser  from "cookie-parser";
+import session from "express-session";
 import "./db/configDB.js"
 
-const app = express();
+//Import Routers
+import routerProduct from "./routes/products.router.js";
+import routerCart from "./routes/cart.router.js";
+import routerSessions from "./routes/sessions.router.js";
+import routerViews from "./routes/views.router.js";
 
+//Import managers
+import { productManager } from "./db/manager/productManager.js";
+import { MessagesManager } from "./db/manager/messagesManager.js";
+
+
+const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(__dirname + "/public"));
+app.use(cookieParser());
+
+//Mongo
 const URI = "mongodb+srv://ealvarenga:HitomiEchizen100@cluster0.f2pvn62.mongodb.net/bdentrega15?retryWrites=true&w=majority"
-app.use(session({
-	store: new MongoStore({mongoUrl: URI}),
-	secret: "secretSession",
-	cookie: {maxAge:60000}
+app.use(session({ 
+
+  store: new MongoStore({mongoUrl: URI}),
+  secret: 'secretSession', 
+  cookie: { maxAge: 60000 }
+
 }))
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true}));
-app.use(express.static(__dirname + "/public"));
-app.use(cookieParser("SecretCookie"))
-
-//Handlebars
+//HandleBars
 app.engine("handlebars", engine());
-app.set('view engine', "handlebars");
-app.set('view', __dirname + "/views");
+app.set("view engine", "handlebars");
+app.set("views", __dirname + "/views");
 
-//Routes
-app.use("/api/products", productRouter); 
-app.use("/api/cart", cartRouter);
-app.use("/api/users", userRouter);
-app.use("/api/sessions", sessionsRouter);
-app.use("/", viewsRouter);
+//Routers
+app.use("/api/products", routerProduct);
+app.use("/api/carts", routerCart);
+app.use("/api/views", routerViews);
+app.use("/api/sessions", routerSessions);
 
+const httpServer = app.listen(8080, () => {console.log("Servidor escuchando en el puerto 8080");});
 
-const httpServer = app.listen(8080, () => {console.log(`Servidor escuchando en el puerto 8080`);});
-
-//SocketServer
 const socketServer = new Server(httpServer);
-socketServer.on("connection", (socket)=> {
-	socket.on("newMessage", async(message) =>{
-		await chatManager.newOne(message)
-		const messages = await chatManager.findAll()
-		socketServer.emit("sendMessage", messages);
-	});
-});
-
-socket.on("showProducts", async() => {
-    const products = await productManager.findAll({limit:10, page:1, sort:{}, query:{} })
-    socketServer.emit("sendProducts", products);
+const messagesTotal = [];
+socketServer.on("connection", async (socket) => {
+  const productosOld = await productManager.getProduct();
+  socket.emit("productsInitial", productosOld);
+  socket.on("addProduct", async (product) => {
+    const producto = await productManager.createOne(product);
+    const productosActualizados = await productManager.getProduct();
+    socket.emit("productUpdate", productosActualizados);
   });
+
+  socket.on("deleteProduct", async (productId) => {
+    const productosOld = await productManager.getProduct();
+    const producto = await productManager.deleteOne(+productId);
+    const productosActualizados = await productManager.getProduct();
+    socket.emit("productDelete", productosActualizados);
+  });
+
+  socket.on("newUser", (nUser) => {
+    socket.broadcast.emit("userConnected", nUser)
+  })
+
+  //Chat
+  socket.on("message", async (info) => {
+    messagesTotal.push(info);
+    const messageTotal = await MessagesManager.createOneMessage(info);
+    socketServer.emit("chatTotal", messagesTotal)
+  })
+});
+ 
+

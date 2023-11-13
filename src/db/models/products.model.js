@@ -1,41 +1,43 @@
-import mongoose from "mongoose";
-import mongoosePaginate from "mongoose-paginate-v2"
+import { Schema, model } from "mongoose";
+import mongoosePaginate from 'mongoose-paginate-v2'
 
-const productsSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: true,
-  },
-  price: {
-    type: Number,
-    required: true,
-  },
-  thumbnail: {
-    type: Number,
-  },
-  stock: {
-    type: Number,
-    required: true,
-  },
-  code: {
-    type: String,
-    require:true
-  },
-  stock: {
-    type: Number,
-    default: 0,
-    required: true,
-  },
-  status: {
-    type: Boolean,
-    default: true
-  }
+const productsSchema = new Schema({
+    title: {
+        type: String,
+        required: true
+    },
+    description: {
+        type: String,
+        required: true
+    },
+    price: {
+        type: Number,
+        required: true
+
+    },
+    code: {
+
+        type: String,
+        required: true,
+        unique: true,
+    },
+    stock: {
+
+        type: Number,
+        required: true
+    },
+    status: {
+        type: Boolean,
+        default: true
+    },
+    thumbnails: {
+        type: String,
+    }
+
 });
 
-productsSchema.plugin(mongoosePaginate)
+productsSchema.plugin(mongoosePaginate);
 
-export const productsModel = mongoose.model("Products", productsSchema);
+
+const productsModel = model("Products", productsSchema);
+export { productsModel };
