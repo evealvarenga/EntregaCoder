@@ -1,11 +1,11 @@
 import { Router } from "express";
 import { usersManager } from "../db/manager/usersManager.js";
-import { hashData, compareData } from "../utils.js";
-import { hash } from "bcrypt";
+import { hashData } from "../utils.js";
+import passport from "passport";
 
 const router = Router();
 
-
+/*
 router.post("/signup", async (req, res) => {
   const { name, last_name, email, password } = req.body
   if (!email || !password || !name || !last_name) {
@@ -47,8 +47,14 @@ router.post("/login", async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-});
+});*/
 
+
+router.post("/signup", passport.authenticate("singup", 
+{successRedirect: "/profile", failureRedirect: "/error"}))
+
+router.post("/login", passport.authenticate("login", 
+{successRedirect: "/profile", failureRedirect: "/error"}));
 
 router.get("/signout", async (req, res) => {
   req.session.destroy(() => { res.redirect("/api/views/login") })
