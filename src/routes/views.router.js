@@ -69,4 +69,7 @@ router.get("/profile", async (req, res) => {
   res.render("profile")
 });
 
+router.get("/restaurar", (req,res) =>{
+  res.render("restaurar");
+})
 export default router;

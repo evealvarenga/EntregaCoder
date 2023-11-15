@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { usersManager } from "../db/manager/usersManager.js";
+import { hashData, compareData } from "../utils.js";
+import { hash } from "bcrypt";
 
 const router = Router();
 
@@ -11,7 +13,8 @@ router.post("/signup", async (req, res) => {
   }
 
   try {
-    const createUser = await usersManager.createOne(req.body);
+    const hashPassword = await hashData(password);
+    const createUser = await usersManager.createOne({ ...req.body, password: hashPassword});
     res.redirect("/api/views/products")
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -29,9 +32,9 @@ router.post("/login", async (req, res) => {
     if (!user) {
       return res.redirect("/api/views/signup")
     }
-    const passwordVald = user.password === password;
+    const passwordVald = await compareData(password, user.password)
     if (!passwordVald) {
-      return res.status(404).json({ message: "Clave incorrecta" });
+      return res.status(404).json({ message: "Contraseña incorrecta" });
     }
     let correoAdmin = "adminCoder@coder.com";
     let claveAdmin = "adminCod3r123";
@@ -51,4 +54,20 @@ router.get("/signout", async (req, res) => {
   req.session.destroy(() => { res.redirect("/api/views/login") })
 });
 
+router.post("/restaurar", async(req,res) =>{
+  const {email, password} = req.body
+  try {
+    const user = await usersManager.findByEmail(email);
+    if (!user) {
+      return res.redirect("/api/views/login")
+    }
+    const hashPassword = await hashData(password)
+    user.password = hashPassword;
+    await user.save()
+    res.status(200).json({ message: "User update" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+})
+ 
 export default router;
