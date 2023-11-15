@@ -6,6 +6,8 @@ import MongoStore  from "connect-mongo";
 import cookieParser  from "cookie-parser";
 import session from "express-session";
 import "./db/configDB.js"
+import passport from "passport";
+import "./passport.js"
 
 //Import Routers
 import routerProduct from "./routes/products.router.js";
@@ -24,7 +26,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/public"));
 app.use(cookieParser());
 
-//Mongo
+//Session
 const URI = "mongodb+srv://ealvarenga:HitomiEchizen100@cluster0.f2pvn62.mongodb.net/bdentrega15?retryWrites=true&w=majority"
 app.use(session({ 
 
@@ -33,6 +35,10 @@ app.use(session({
   cookie: { maxAge: 60000 }
 
 }))
+
+//Passport
+app.use(passport.initialize())
+app.use(passport.session())
 
 //HandleBars
 app.engine("handlebars", engine());
