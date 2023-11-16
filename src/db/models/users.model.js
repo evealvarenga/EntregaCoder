@@ -15,10 +15,13 @@ const usersSchema = new Schema({
         unique: true
     },
     password: {
-
         type: String,
-        required: true,  
     },
+
+    isGithub:{
+        type: Boolean,
+        default: false
+    }
 });
 
 const usersModel = model("Users", usersSchema);

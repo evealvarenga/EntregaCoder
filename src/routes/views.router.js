@@ -40,9 +40,9 @@ router.get("/products", async (req, res) => {
 });
 
 router.get("/carts/:cartId", async (req, res) => {
-  const {cartId} = req.params
+  const { cartId } = req.params
   let cartById = await cartManager.findCartById(cartId);
-    let cartArray=   cartById.products;
+  let cartArray = cartById.products;
   const cartArrayObject = cartArray.map(doc => doc.toObject());
   console.log(cartArrayObject);
   res.render("cart", {
@@ -70,14 +70,14 @@ router.get("/profile", async (req, res) => {
     return res.redirect("/login");
   }
   const { name, email } = req.user;
-  res.render("profile", { user: {name, email } });
+  res.render("profile", { user: { name, email } });
 });
 
 router.get("/error", async (req, res) => {
   res.render("error")
 });
 
-router.get("/restaurar", (req,res) =>{
+router.get("/restaurar", (req, res) => {
   res.render("restaurar");
 })
 export default router;

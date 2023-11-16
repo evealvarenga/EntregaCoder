@@ -50,16 +50,16 @@ router.post("/login", async (req, res) => {
 });*/
 
 
-router.post("/signup", passport.authenticate("singup", {successRedirect: "/api/views/profile", failureRedirect: "/api/views//error"}))
+router.post("/signup", passport.authenticate("singup", { successRedirect: "/api/views/profile", failureRedirect: "/api/views/error" }))
 
-router.post("/login", passport.authenticate("login",{successRedirect: "/api/views/profile", failureRedirect: "/api/views//error"}));
+router.post("/login", passport.authenticate("login", { successRedirect: "/api/views/profile", failureRedirect: "/api/views/error" }));
 
 router.get("/signout", async (req, res) => {
   req.session.destroy(() => { res.redirect("/api/views/login") })
 });
 
-router.post("/restaurar", async(req,res) =>{
-  const {email, password} = req.body
+router.post("/restaurar", async (req, res) => {
+  const { email, password } = req.body
   try {
     const user = await usersManager.findByEmail(email);
     if (!user) {
@@ -73,5 +73,11 @@ router.post("/restaurar", async(req,res) =>{
     res.status(500).json({ message: error.message });
   }
 })
- 
+
+router.get("/auth/github",passport.authenticate("github", { scope: ["user:email"] }))
+
+router.get("/callback", passport.authenticate("github"), (req, res) => {
+  res.send("Probando");
+});
+
 export default router;
