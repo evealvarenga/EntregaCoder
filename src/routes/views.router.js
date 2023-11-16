@@ -66,7 +66,15 @@ router.get("/signup", async (req, res) => {
 });
 
 router.get("/profile", async (req, res) => {
-  res.render("profile")
+  if (!req.session.passport) {
+    return res.redirect("/login");
+  }
+  const { name, email } = req.user;
+  res.render("profile", { user: {name, email } });
+});
+
+router.get("/error", async (req, res) => {
+  res.render("error")
 });
 
 router.get("/restaurar", (req,res) =>{

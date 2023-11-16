@@ -50,11 +50,9 @@ router.post("/login", async (req, res) => {
 });*/
 
 
-router.post("/signup", passport.authenticate("singup", 
-{successRedirect: "/profile", failureRedirect: "/error"}))
+router.post("/signup", passport.authenticate("singup", {successRedirect: "/api/views/profile", failureRedirect: "/api/views//error"}))
 
-router.post("/login", passport.authenticate("login", 
-{successRedirect: "/profile", failureRedirect: "/error"}));
+router.post("/login", passport.authenticate("login",{successRedirect: "/api/views/profile", failureRedirect: "/api/views//error"}));
 
 router.get("/signout", async (req, res) => {
   req.session.destroy(() => { res.redirect("/api/views/login") })
