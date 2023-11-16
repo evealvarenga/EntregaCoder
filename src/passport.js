@@ -39,12 +39,12 @@ passport.use("login",
                 const passwordVald = await compareData(password, user.password)
                 if (!passwordVald) {
                     return done(null, false)
-                }
-                      if (email === "adminCoder@coder.com") {
-                        req.session.user = { email, name: user.name, isAdmin: true };
-                      } else {
-                        req.session.user = { email, name: user.name, isAdmin: false };
-                      };
+                }/*
+                if (email === "adminCoder@coder.com") {
+                    req.session.user = { email, name: user.name, isAdmin: true };
+                } else {
+                    req.session.user = { email, name: user.name, isAdmin: false };
+                };*/
                 return done(null, user)
             } catch (error) {
                 return done(error)
