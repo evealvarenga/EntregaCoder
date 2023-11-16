@@ -49,7 +49,6 @@ router.post("/login", async (req, res) => {
   }
 });*/
 
-
 router.post("/signup", passport.authenticate("singup", { successRedirect: "/api/views/profile", failureRedirect: "/api/views/error" }))
 
 router.post("/login", passport.authenticate("login", { successRedirect: "/api/views/profile", failureRedirect: "/api/views/error" }));
