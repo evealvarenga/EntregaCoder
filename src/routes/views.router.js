@@ -67,7 +67,7 @@ router.get("/signup", async (req, res) => {
 
 router.get("/profile", async (req, res) => {
   if (!req.session.passport) {
-    return res.redirect("/login");
+    return res.redirect("api/views/login");
   }
   const { name, email } = req.user;
   res.render("profile", { user: { name, email } });

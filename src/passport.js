@@ -30,7 +30,6 @@ passport.use("login",
             if (!email || !password) {
                 return done(null, false)
             }
-
             try {
                 const user = await usersManager.findByEmail(email);
                 if (!user) {
@@ -39,12 +38,12 @@ passport.use("login",
                 const passwordVald = await compareData(password, user.password)
                 if (!passwordVald) {
                     return done(null, false)
-                }/*
+                }
                 if (email === "adminCoder@coder.com") {
                     req.session.user = { email, name: user.name, isAdmin: true };
                 } else {
-                    req.session.user = { email, name: user.name, isAdmin: false };
-                };*/
+                    req.session.user =  { email: user.email, name: user.name, isAdmin: false };
+                };
                 return done(null, user)
             } catch (error) {
                 return done(error)
@@ -58,6 +57,7 @@ passport.use('github',
         clientID: "Iv1.5cf21636df5e094c",
         clientSecret: "7a8f917759ffd040f7124f9fb55081ddf7b99095",
         callbackURL: "http://localhost:8080/api/sessions/callback",
+        scope: ['user:email'],
     },
         async (accessToken, refreshToken, profile, done) => {
             try {

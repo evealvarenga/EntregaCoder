@@ -75,8 +75,6 @@ router.post("/restaurar", async (req, res) => {
 
 router.get("/auth/github",passport.authenticate("github", { scope: ["user:email"] }))
 
-router.get("/callback", passport.authenticate("github"), (req, res) => {
-  res.send("Probando");
-});
+router.get("/callback", passport.authenticate("github", { successRedirect: "/api/views/profile", failureRedirect: "/api/views/error" }));
 
 export default router;
