@@ -60,8 +60,9 @@ passport.use('github',
         scope: ['user:email'],
     },
         async (accessToken, refreshToken, profile, done) => {
+            const emailUser = profile.emails[0].value
             try {
-                const userDB = await usersManager.findByEmail(profile._json.email);
+                const userDB = await usersManager.findByEmail(emailUser);
                 // LOGIN
                 if (userDB) {
                     if (userDB.isGithub) {
@@ -74,7 +75,7 @@ passport.use('github',
                 const user = {
                     name: profile._json.name.split(" ")[0],
                     last_name: profile._json.name.split(" ")[1],
-                    email: profile._json.email,
+                    email: emailUser,
                     password: " ",
                     isGithub: true,
                 };
