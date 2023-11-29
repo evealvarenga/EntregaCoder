@@ -49,9 +49,26 @@ router.post("/login", async (req, res) => {
   }
 });*/
 
-router.post("/signup", passport.authenticate("singup", { successRedirect: "/api/views/profile", failureRedirect: "/api/views/error" }))
+router.post("/signup",
+  passport.authenticate("signup",
+    { failureRedirect: "/api/views/error" }),
+  async (req, res) => {
+    const { email, name, last_name } = req.user
+    const admin = email === "adminCoder@coder.com" ? true : false
+    req.session.user = { email, name, last_name, cart: null, admin }
+    res.redirect("/api/views/products")
+  });
 
-router.post("/login", passport.authenticate("login", { successRedirect: "/api/views/profile", failureRedirect: "/api/views/error" }));
+router.post("/login",
+  passport.authenticate("login",
+    {
+      failureRedirect: "/api/views/error"
+    }), (req, res) => {
+      if (req.user) {
+        req.session.user = req.user
+        res.redirect("/api/views/products")
+      }
+    });
 
 router.get("/signout", async (req, res) => {
   req.session.destroy(() => { res.redirect("/api/views/login") })
@@ -73,8 +90,16 @@ router.post("/restaurar", async (req, res) => {
   }
 })
 
-router.get("/auth/github",passport.authenticate("github", { scope: ['user:email'] }))
+router.get("/auth/github", passport.authenticate("github", { scope: ['user:email'] }))
 
-router.get("/callback", passport.authenticate("github", { successRedirect: "/api/views/profile", failureRedirect: "/api/views/error" }));
+router.get("/callback",
+  passport.authenticate("github",
+    { failureRedirect: "/api/views/error" }),
+  async (req, res) => {
+    const { email, name, last_name } = req.user
+    const admin = email === "adminCoder@coder.com" ? true : false
+    req.session.user = { email, name, last_name, cart: null, admin }
+    res.redirect("/api/views/products")
+  });
 
 export default router;

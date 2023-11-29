@@ -6,11 +6,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
-    <title>{{Document}}</title>
+    <title>{{Tittle}}</title>
 </head>
 
 <body>
-    {{{body}}}
+    <div class="container">
+        <div class="row" style="background-color: #dddaca">
+            <div class="col-4 text-center">
+
+                <div class="">
+                    <b>Hola,</b>
+                    {{#if user}}
+                    <b>{{user.name}}</b>
+                    {{#if user.admin}}
+                    (Admin)
+                    {{/if}}
+                    {{else}}
+                    Inicia tu sesión
+                    {{/if}}
+                </div>
+                <div>
+                    {{#if user}}
+                    <a href="#" onclick="location.href='/api/sessions/signout'" class="sessionButton">Salir</a>
+                    {{else}}
+                    <a href="#" onclick="location.href='/api/views/login'" class="sessionButton">Ingresa</a> |
+                    <a href="#" onclick="location.href='/api/views/signup'" class="sessionButton">Registrate</a>
+
+                    {{/if}}
+                </div>
+
+            </div>
+            <div class="col-4 text-right">
+                <button onclick="goToCart()">Mi carrito</button>
+            </div>
+
+
+        </div>
+        {{{body}}}
 </body>
 
 </html>

@@ -29,11 +29,11 @@ app.use(cookieParser());
 //Session
 const URI = "mongodb+srv://ealvarenga:HitomiEchizen100@cluster0.f2pvn62.mongodb.net/bdentrega15?retryWrites=true&w=majority"
 app.use(session({ 
-
   store: new MongoStore({mongoUrl: URI}),
   secret: 'secretSession', 
+  resave: false,
+  saveUninitialized: false,
   cookie: { maxAge: 60000 }
-
 }))
 
 //Passport

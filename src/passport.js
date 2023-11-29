@@ -11,8 +11,8 @@ passport.use("signup",
     new localStrategy(
         { passReqToCallback: true, usernameField: "email" },
         async (req, email, password, done) => {
-            const { name, last_name } = req.body
-            if (!email || !password || !name || !last_name) {
+            const { name, last_name, age } = req.body
+            if (!email || !password || !name || !last_name|| !age ) {
                 return done(null, false)
             }
             try {
@@ -25,7 +25,8 @@ passport.use("signup",
         }))
 
 passport.use("login",
-    new localStrategy({ usernameField: "email" },
+    new localStrategy(
+        { usernameField: "email" },
         async (email, password, done) => {
             if (!email || !password) {
                 return done(null, false)
@@ -39,11 +40,6 @@ passport.use("login",
                 if (!passwordVald) {
                     return done(null, false)
                 }
-                if (email === "adminCoder@coder.com") {
-                    req.session.user = { email, name: user.name, isAdmin: true };
-                } else {
-                    req.session.user =  { email: user.email, name: user.name, isAdmin: false };
-                };
                 return done(null, user)
             } catch (error) {
                 return done(error)

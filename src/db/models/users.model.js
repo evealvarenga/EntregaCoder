@@ -14,13 +14,23 @@ const usersSchema = new Schema({
         required: true,
         unique: true
     },
+    age: {
+        type: Number,
+        required: true,
+    },
     password: {
         type: String,
     },
-
     isGithub:{
         type: Boolean,
         default: false
+    },
+    role:{
+        type: String,
+        default: "user"
+    },
+    cart:{
+        type: String,
     }
 });
 

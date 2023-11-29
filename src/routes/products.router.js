@@ -4,9 +4,9 @@ import { productManager } from "../db/manager/productManager.js";
 const router = Router();
 
 router.get("/", async (req, res) => {
-  if (!req.session.user) {
-    return res.redirect("/api/views/login")
-  }
+  //if (!req.session.user) {
+  //  return res.redirect("/api/views/login")
+  //}
   let products = await productManager.findAll(req.query)
   let productsDB = products.payload
   const productsObject = productsDB.map(p => p.toObject());
