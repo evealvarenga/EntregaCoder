@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { usersManager } from "../db/manager/usersManager.js";
-import { hashData } from "../utils.js";
+import { hashData, generateToken } from "../utils.js";
 import passport from "passport";
 
 const router = Router();
@@ -58,16 +58,20 @@ router.post("/signup",
     req.session.user = { email, name, last_name, cart: null, admin }
     res.redirect("/api/views/products")
   });
-
+ 
 router.post("/login",
   passport.authenticate("login",
     {
       failureRedirect: "/api/views/error"
     }), (req, res) => {
-      if (req.user) {
-        req.session.user = req.user
-        res.redirect("/api/views/products")
-      }
+      const {name, last_name, email} = req.user
+      const token = generateToken({
+        name,
+        last_name,
+        email
+      }); 
+      res.cookie("token", token, { maxAge: 60000, httpOnly: true })
+      return res.redirect("/api/sessions/current")
     });
 
 router.get("/signout", async (req, res) => {
@@ -101,5 +105,11 @@ router.get("/callback",
     req.session.user = { email, name, last_name, cart: null, admin }
     res.redirect("/api/views/products")
   });
+
+router.get("/current", passport.authenticate("current", { session: false }), (req, res) => {
+  const user = req.user
+  res.json({ message: user })
+});
+
 
 export default router;

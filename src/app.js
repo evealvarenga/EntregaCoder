@@ -18,6 +18,7 @@ import routerViews from "./routes/views.router.js";
 //Import managers
 import { productManager } from "./db/manager/productManager.js";
 import { MessagesManager } from "./db/manager/messagesManager.js";
+import { usersManager } from "./db/manager/usersManager.js";
 
 
 const app = express();

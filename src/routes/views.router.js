@@ -25,15 +25,16 @@ router.get("/chat", async (req, res) => {
 
 
 router.get("/products", async (req, res) => {
-  if (!req.session.user) {
+  if (!req.session.passport) {
     return res.redirect("/api/views/login")
   }
   let products = await productManager.findAll(req.query)
   let productsDB = products.payload
   const productsObject = productsDB.map(p => p.toObject());
+  const {name} = req.user
   res.render("products", {
     productsData: productsObject,
-    user: req.session.user
+    user: {name}
   });
 
 

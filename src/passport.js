@@ -2,9 +2,12 @@ import passport from "passport";
 import { usersManager } from "./db/manager/usersManager.js";
 import { Strategy as localStrategy } from "passport-local";
 import { Strategy as GitHubStrategy } from "passport-github2";
+import { ExtractJwt, Strategy as JWTSrategy } from "passport-jwt";
 import { hashData, compareData } from "./utils.js";
 import { usersModel } from "./db/models/users.model.js";
+import { Schema } from "mongoose";
 
+const SECRET_KEY_JWT = "secretJWT"
 
 //Passport Local
 passport.use("signup",
@@ -46,6 +49,21 @@ passport.use("login",
             }
         }))
 
+
+//Passport JWT
+
+const fromCookies = (req) => {
+    if(!req.cookies.token) {
+        return console.log("ERROR")
+    }
+    return req.cookies.token
+}
+
+passport.use("current", new JWTSrategy(
+    {jwtFromRequest: ExtractJwt.fromExtractors([fromCookies]),
+    secretOrKey: SECRET_KEY_JWT},
+    (jwt_playload, done) => { done(null, jwt_playload)}
+))
 
 //Passport GitHub
 passport.use('github',
