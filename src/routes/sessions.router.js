@@ -54,6 +54,12 @@ router.post("/signup",
     { failureRedirect: "/api/views/error" }),
   async (req, res) => {
     const { email, name, last_name } = req.user
+    const token = generateToken({
+      name,
+      last_name,
+      email
+    }); 
+    res.cookie("token", token, { maxAge: 60000, httpOnly: true })
     const admin = email === "adminCoder@coder.com" ? true : false
     req.session.user = { email, name, last_name, cart: null, admin }
     res.redirect("/api/views/products")
