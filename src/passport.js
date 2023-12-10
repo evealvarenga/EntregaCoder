@@ -6,8 +6,11 @@ import { ExtractJwt, Strategy as JWTSrategy } from "passport-jwt";
 import { hashData, compareData } from "./utils.js";
 import { usersModel } from "./db/models/users.model.js";
 import { Schema } from "mongoose";
+import config from "./config.js"
 
-const SECRET_KEY_JWT = "secretJWT"
+const SECRET_KEY_JWT = config.secret_jwt
+const GITHUB_CLIENT_ID = config.github_client_id
+const GITHUB_CLIENT_SECRET = config.github_client_secret
 
 //Passport Local
 passport.use("signup",
@@ -68,8 +71,8 @@ passport.use("current", new JWTSrategy(
 //Passport GitHub
 passport.use('github',
     new GitHubStrategy({
-        clientID: "Iv1.5cf21636df5e094c",
-        clientSecret: "7a8f917759ffd040f7124f9fb55081ddf7b99095",
+        clientID: GITHUB_CLIENT_ID,
+        clientSecret: GITHUB_CLIENT_SECRET,
         callbackURL: "http://localhost:8080/api/sessions/callback",
         scope: ['user:email'],
     },

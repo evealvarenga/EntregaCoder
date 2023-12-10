@@ -8,6 +8,7 @@ import session from "express-session";
 import "./db/configDB.js"
 import passport from "passport";
 import "./passport.js"
+import config from "./config.js"
 
 //Import Routers
 import routerProduct from "./routes/products.router.js";
@@ -28,9 +29,9 @@ app.use(express.static(__dirname + "/public"));
 app.use(cookieParser());
 
 //Session
-const URI = "mongodb+srv://ealvarenga:HitomiEchizen100@cluster0.f2pvn62.mongodb.net/bdentrega15?retryWrites=true&w=majority"
+const MONGO_URI = config.mongo_uri
 app.use(session({ 
-  store: new MongoStore({mongoUrl: URI}),
+  store: new MongoStore({mongoUrl: MONGO_URI}),
   secret: 'secretSession', 
   resave: false,
   saveUninitialized: false,
