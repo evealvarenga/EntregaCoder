@@ -1,10 +1,10 @@
 import passport from "passport";
-import { usersManager } from "./db/manager/usersManager.js";
+import { usersManager } from "../daos/usersManager.js";
 import { Strategy as localStrategy } from "passport-local";
 import { Strategy as GitHubStrategy } from "passport-github2";
 import { ExtractJwt, Strategy as JWTSrategy } from "passport-jwt";
-import { hashData, compareData } from "./utils.js";
-import { usersModel } from "./db/models/users.model.js";
+import { hashData, compareData } from "../utils.js";
+import { usersModel } from "../db/models/users.model.js";
 import { Schema } from "mongoose";
 import config from "./config.js"
 

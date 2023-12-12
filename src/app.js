@@ -7,8 +7,8 @@ import cookieParser  from "cookie-parser";
 import session from "express-session";
 import "./db/configDB.js"
 import passport from "passport";
-import "./passport.js"
-import config from "./config.js"
+import "./config/passport.js"
+import config from "./config/config.js"
 
 //Import Routers
 import routerProduct from "./routes/products.router.js";
@@ -17,9 +17,9 @@ import routerSessions from "./routes/sessions.router.js";
 import routerViews from "./routes/views.router.js";
 
 //Import managers
-import { productManager } from "./db/manager/productManager.js";
-import { MessagesManager } from "./db/manager/messagesManager.js";
-import { usersManager } from "./db/manager/usersManager.js";
+import { productManager } from "./daos/productManager.js";
+import { MessagesManager } from "./daos/messagesManager.js";
+import { usersManager } from "./daos/usersManager.js";
 
 
 const app = express();

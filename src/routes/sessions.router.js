@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { usersManager } from "../db/manager/usersManager.js";
+import { usersManager } from "../daos/usersManager.js";
 import { hashData, generateToken } from "../utils.js";
 import passport from "passport";
 

@@ -1,8 +1,17 @@
 import { Router } from "express";
-import { productManager } from "../db/manager/productManager.js";
+import { findProductById, findAllProduct, createOneProduc, deleteOneProdAll, updateProducts } from "../controllers/products.controller.js";
+
+//import { productManager } from "../db/manager/productManager.js";
 
 const router = Router();
 
+router.get("/", findAllProduct)
+router.get("/:pid", findProductById)
+router.post("/", createOneProduc)
+router.delete("/:pid", deleteOneProdAll)
+router.put("/:pid", updateProducts)
+
+/*
 router.get("/", async (req, res) => {
   //if (!req.session.user) {
   //  return res.redirect("/api/views/login")
@@ -78,6 +87,6 @@ router.delete("/:pid", async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-});
+});*/
 
 export default router;

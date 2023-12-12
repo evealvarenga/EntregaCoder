@@ -1,9 +1,18 @@
 import { Router } from "express";
-import { cartManager } from "../db/manager/cartsManager.js";
+import { findCartById, findAllC, addProductCart, createOneCart, deleteOneProdCart, deleteOneCartAll, updateCartQuantity } from "../controllers/cart.controller.js";
+//import { cartManager } from "../db/manager/cartsManager.js";
 
 const router = Router();
 
+router.get("/", findAllC)
+router.post("/", createOneCart)
+router.get("/:cid", findCartById)
+router.put("/:cid/products/:pid", updateCartQuantity)
+router.put("/:cid/products/:pid", addProductCart)
+router.delete("/:cid/products/:pid",deleteOneProdCart)
+router.delete("/:cid", deleteOneCartAll)
 
+/*
 router.get("/", async (req, res) => {
 
   try {
@@ -134,6 +143,6 @@ router.delete("/:idCart/products/:idProduct", async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-});
+});*/
 
 export default router;
