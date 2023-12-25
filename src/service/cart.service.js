@@ -1,36 +1,30 @@
-import { cartManager } from "../daos/cartsManager.js";
+import { cartManager } from "../DAL/daos/mongo/carts.dao.js";
+
 
 export const findAllCart = () => {
-    const carts = cartManager.findAllCart()
-    return carts
+    return cartManager.findAllCart()
 }
 
-export const findById = (id) =>{
-    const cart = cartManager.findCartById(id)
-    return cart
+export const findById = (id) => {
+    return cartManager.findCartById(id)
 }
 
 export const createOne = (obj) => {
-    const createdCart = cartManager.createOneCart(obj)
-    return createdCart
+    return cartManager.createOneCart(obj)
 }
 
-export const addProductToCart = (cid,pid) => {
-    const cartMod = cartManager.addProductToCart(cid,pid)
-    return cartMod
+export const addProductToCart = (cid, pid) => {
+    return cartManager.addProductToCart(cid, pid)
 }
 
-export const deleteOne = (cid,pid) => {
-    const cartmod = cartManager.deleteProductToCart(cid,pid)
-    return cartmod
+export const deleteOne = (cid, pid) => {
+    return cartManager.deleteProductToCart(cid, pid)
 }
 
 export const deleteAll = (cid) => {
-    const cartdel = cartManager.deleteCartById(cid)
-    return cartdel
+    return cartManager.deleteCartById(cid)
 }
 
-export const updateCart = (cid,pid,q) =>{
-    const cartMod = cartManager.addProductToCartQuantity(cid,pib,q)
-    return cartMod
+export const updateCart = (cid, pid, q) => {
+    return cartManager.addProductToCartQuantity(cid, pid, q)
 }

@@ -1,21 +1,26 @@
-import { usersManager } from "../daos/usersManager.js";
-import { hashData } from "../utils.js";
+import { usersManager } from "../DAL/daos/mongo/users.dao.js";
+import { hashData } from "../utils/utils.js";
+import { cartsModel } from "../DAL/models/carts.model.js";
 
 
+class UserService {
+    async findById(id) {
+        const user = await usersManager.getById(id);
+        return user;
+    }
 
-export const findById = (id) => {
-    const user = usersManager.findById(id);
-    return user;
-};
+    async createOne(obj) {
+        const hashedPassword = await hashData(obj.password);
+        const createCart = new cartsModel();
+        await createCart.save();
+        const newObj = ({ ...obj, password: hashedPassword, cart: createCart._id });
+        const newUser = await usersManager.createOne(newObj)
+        return newUser
+    }
 
-export const findByEmail = (id) => {
-    const user = usersManager.findByEmail(id);
-    return user;
-};
+    async findByEmail(id){
+        return usersManager.findByEmail(id)
+    }
+}
 
-export const createOne = (obj) => {
-    const hashedPassword = hashData(obj.password);
-    const newObj = { ...obj, password: hashedPassword };
-    const createdUser = usersManager.createOne(newObj);
-    return createdUser;
-};
+export const UsersService = new UserService()

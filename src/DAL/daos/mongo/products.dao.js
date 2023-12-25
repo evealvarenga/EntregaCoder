@@ -1,6 +1,10 @@
-import { productsModel } from "../db/models/products.model.js";
+import BasicMongo from "./basic.dao.js";
+import { productsModel } from "../../models/products.model.js";
 
-class ProductManager {
+class ProductManager extends BasicMongo {
+    constructor (){
+        super(productsModel)
+    }
 
     async findAll(obj) {
         const { limit = 10, page = 1, order = 0, ...query } = obj;
@@ -35,25 +39,10 @@ class ProductManager {
         return results
     };
 
-    async findById(id) {
-        const response = await productsModel.findById(id);
-        return response;
-    };
-
-    async createOne(obj) {
-        const response = await productsModel.create(obj);
-        return response;
-    };
-
     async updateOne(id, obj) {
-        const response = await productsModel.updateOne({ _id: id }, obj);
-        return response;
+        return await productsModel.updateOne({ _id: id }, obj);
     };
 
-    async deleteOne(id) {
-        const response = await productsModel.deleteOne({ _id: id });
-        return response;
-    };
 }
 
 export const productManager = new ProductManager()

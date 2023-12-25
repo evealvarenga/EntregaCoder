@@ -87,3 +87,29 @@ socketClient.on("productDelete", (products) => {
 
 
 
+const addToCart = async (cartId, _id) => {
+  const url = `http://localhost:8080/api/carts/${cartId}/products/${_id}`;
+  console.log(cartId,_id);
+  const data = {
+      cartId: cartId,
+      _id: _id,
+  };
+  try {
+      const response = await fetch(url, {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+          console.log("Error:", response.status, response.statusText);
+          return;
+      }
+
+      const result = await response.json();
+  } catch (error) {
+      console.log("Error:", error);
+  }
+};

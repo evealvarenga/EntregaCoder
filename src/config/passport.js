@@ -1,11 +1,10 @@
 import passport from "passport";
-import { usersManager } from "../daos/usersManager.js";
+//import { usersManager } from "../DAL/daos/mongo/users.dao.js";
+import { createUser, findUserByEmail, findUserById } from "../controllers/users.controller.js";
 import { Strategy as localStrategy } from "passport-local";
 import { Strategy as GitHubStrategy } from "passport-github2";
 import { ExtractJwt, Strategy as JWTSrategy } from "passport-jwt";
-import { hashData, compareData } from "../utils.js";
-import { usersModel } from "../db/models/users.model.js";
-import { Schema } from "mongoose";
+import { hashData, compareData } from "../utils/utils.js";
 import config from "./config.js"
 
 const SECRET_KEY_JWT = config.secret_jwt
@@ -17,14 +16,10 @@ passport.use("signup",
     new localStrategy(
         { passReqToCallback: true, usernameField: "email" },
         async (req, email, password, done) => {
-            const { name, last_name, age } = req.body
-            if (!email || !password || !name || !last_name|| !age ) {
-                return done(null, false)
-            }
             try {
-                const hashPassword = await hashData(password);
-                const createUser = await usersManager.createOne({ ...req.body, password: hashPassword });
-                return done(null, createUser)
+                const user = req.body
+                const createdUser = await createUser(user)
+                return done(null, createdUser)
             } catch (error) {
                 return done(error)
             }
@@ -38,7 +33,7 @@ passport.use("login",
                 return done(null, false)
             }
             try {
-                const user = await usersManager.findByEmail(email);
+                const user = await findUserByEmail(email);
                 if (!user) {
                     return done(null, false)
                 }
@@ -56,16 +51,18 @@ passport.use("login",
 //Passport JWT
 
 const fromCookies = (req) => {
-    if(!req.cookies.token) {
+    if (!req.cookies.token) {
         return console.log("ERROR")
     }
     return req.cookies.token
 }
 
 passport.use("current", new JWTSrategy(
-    {jwtFromRequest: ExtractJwt.fromExtractors([fromCookies]),
-    secretOrKey: SECRET_KEY_JWT},
-    (jwt_playload, done) => { done(null, jwt_playload)}
+    {
+        jwtFromRequest: ExtractJwt.fromExtractors([fromCookies]),
+        secretOrKey: SECRET_KEY_JWT
+    },
+    (jwt_playload, done) => { done(null, jwt_playload) }
 ))
 
 //Passport GitHub
@@ -79,7 +76,7 @@ passport.use('github',
         async (accessToken, refreshToken, profile, done) => {
             const emailUser = profile.emails[0].value
             try {
-                const userDB = await usersManager.findByEmail(emailUser);
+                const userDB = await findUserByEmail(emailUser);
                 // LOGIN
                 if (userDB) {
                     if (userDB.isGithub) {
@@ -96,7 +93,7 @@ passport.use('github',
                     password: " ",
                     isGithub: true,
                 };
-                const createdUser = await usersManager.createOne(user);
+                const createdUser = await createUser(user);
                 return done(null, createdUser);
             } catch (error) {
                 return done(error);
@@ -110,7 +107,7 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (id, done) => {
     try {
-        const user = await usersManager.findById(id)
+        const user = findUserById(id)
         done(null, user)
     } catch (error) {
         done(error);

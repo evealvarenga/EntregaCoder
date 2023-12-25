@@ -1,19 +1,20 @@
 import { Router } from "express";
-import { findCartById, findAllC, addProductCart, createOneCart, deleteOneProdCart, deleteOneCartAll, updateCartQuantity } from "../controllers/cart.controller.js";
-//import { cartManager } from "../db/manager/cartsManager.js";
+import { findCartById, findAllC, addProductCart, createOneCart, deleteOneProdCart, deleteOneCartAll, updateCartQuantity, cartBuy } from "../controllers/cart.controller.js";
+import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
 router.get("/", findAllC)
-router.post("/", createOneCart)
+router.post("/", authMiddleware(["USER"]) ,createOneCart)
 router.get("/:cid", findCartById)
-router.put("/:cid/products/:pid", updateCartQuantity)
-router.put("/:cid/products/:pid", addProductCart)
-router.delete("/:cid/products/:pid",deleteOneProdCart)
-router.delete("/:cid", deleteOneCartAll)
+router.get("/:cid/purchase", cartBuy)
+router.put("/:cid/products/:pid",authMiddleware(["USER"]) , updateCartQuantity)
+router.post("/:cid/products/:pid",authMiddleware(["USER"]) , addProductCart)
+router.delete("/:cid/products/:pid",authMiddleware(["USER"]) , deleteOneProdCart)
+router.delete("/:cid",authMiddleware(["USER"]) , deleteOneCartAll)
 
-/*
-router.get("/", async (req, res) => {
+
+/*router.get("/", async (req, res) => {
 
   try {
     const carts = await cartManager.findAllCart()

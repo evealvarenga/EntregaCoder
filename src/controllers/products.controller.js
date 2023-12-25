@@ -1,9 +1,9 @@
-import { findAll, findById, createOne, deleteOneProduct, updateProduct } from "../service/product.service.js";
+import { productService } from "../service/product.service.js";
 
 export const findProductById = async (req, res) => {
     const { pid } = req.params;
     try {
-        const product = await findById(pid);
+        const product = await productService.findById(pid);
         if (!product) {
             return res
             .status(404)
@@ -17,7 +17,7 @@ export const findProductById = async (req, res) => {
 
 export const findAllProduct = async (req, res) => {
     try {
-        const products = await findAll(req.query); 
+        const products = await productService.findAll(req.query); 
         res.status(200).json({ message: "Product found", products });   
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -26,12 +26,11 @@ export const findAllProduct = async (req, res) => {
 
 export const createOneProduc = async (req, res) => {
     const { title, description, price, code, stock, category } = req.body;
-
     if (!title || !description || !price || !code || !stock || ! category) {
         return res.status(400).json({ message: "Some data is missing" });
     }
     try {
-        const response = await createOne(req.body);
+        const response = await productService.createOne(req.body);
         res.status(200).json({ message: "Producto created", response });
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -41,7 +40,7 @@ export const createOneProduc = async (req, res) => {
 export const deleteOneProdAll = async (req, res) => {
     const { pid } = req.params;
     try {
-        const response = await deleteOneProduct(pid);
+        const response = await productService.deleteOneProduct(pid);
         if (!response) {
             return res
             .status(404)
@@ -56,7 +55,7 @@ export const deleteOneProdAll = async (req, res) => {
 export const updateProducts = async (req, res) => {
     const { pid } = req.params;
     try {
-        const response = await updateProduct(pid, req.body);
+        const response = await productService.updateProduct(pid, req.body);
         if (!response) {
             return res
             .status(404)

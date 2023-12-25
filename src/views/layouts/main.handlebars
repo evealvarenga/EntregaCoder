@@ -4,44 +4,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--    LINK BOOTSTRAP  -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+
+    <!--  TOASTIFY  -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
-    <title>{{Tittle}}</title>
+    <!--    LINK FONTAWESOME    -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+        integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Entrega Coder-House</title>
 </head>
 
 <body>
     <div class="container">
-        <div class="row" style="background-color: #dddaca">
-            <div class="col-4 text-center">
+        <nav class="navbar sticky-top bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#" style="color: white;">Entrega Coder.</a>
 
-                <div class="">
-                    <b>Hola,</b>
+                <div>
                     {{#if user}}
-                    <b>{{user.name}}</b>
+                    <b style="color: white;">Hola, <a href="#" onclick="location.href='/api/views/profile'" class="sessionButton">{{user.name}}</a></b>
                     {{#if user.admin}}
                     (Admin)
                     {{/if}}
                     {{else}}
-                    Inicia tu sesión
-                    {{/if}}
-                </div>
-                <div>
                     {{#if user}}
-                    <a href="#" onclick="location.href='/api/sessions/signout'" class="sessionButton">Salir</a>
+                    <a href="#" onclick="location.href='/api/sessions/signout'" class="sessionButton"><button
+                            class="btn btn-outline-warning" type="button" data-bs-toggle="offcanvas"
+                            data-bs-target="#Side_carrito" aria-controls="offcanvasRight">Salir</button></a>
                     {{else}}
-                    <a href="#" onclick="location.href='/api/views/login'" class="sessionButton">Ingresa</a> |
-                    <a href="#" onclick="location.href='/api/views/signup'" class="sessionButton">Registrate</a>
-
+                    <a href="#" onclick="location.href='/api/views/login'" class="sessionButton"><button
+                            class="btn btn-outline-warning" type="button" data-bs-toggle="offcanvas"
+                            data-bs-target="#Side_carrito" aria-controls="offcanvasRight"><i class="fa-solid fa-right-to-bracket"></i> Inicia sesión</button></a> <a
+                        href="#" onclick="location.href='/api/views/signup'" class="sessionButton"><button
+                            class="btn btn-outline-warning" type="button" data-bs-toggle="offcanvas"
+                            data-bs-target="#Side_carrito" aria-controls="offcanvasRight"><i class="fa-solid fa-arrow-right-to-bracket"></i> Registrarse</button></a>
+                    {{/if}}
                     {{/if}}
                 </div>
-
             </div>
-            <div class="col-4 text-right">
-                <button onclick="goToCart()">Mi carrito</button>
-            </div>
-
-
-        </div>
+        </nav>
         {{{body}}}
 </body>
 

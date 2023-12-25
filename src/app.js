@@ -1,11 +1,11 @@
 import express from "express";
 import { engine } from "express-handlebars";
-import { __dirname } from "./utils.js";
+import { __dirname } from "./utils/utils.js";
 import { Server } from "socket.io";
 import MongoStore  from "connect-mongo";
 import cookieParser  from "cookie-parser";
 import session from "express-session";
-import "./db/configDB.js"
+import "./config/configDB.js"
 import passport from "passport";
 import "./config/passport.js"
 import config from "./config/config.js"
@@ -15,11 +15,11 @@ import routerProduct from "./routes/products.router.js";
 import routerCart from "./routes/cart.router.js";
 import routerSessions from "./routes/sessions.router.js";
 import routerViews from "./routes/views.router.js";
+import routerUsers from "./routes/users.router.js";
 
 //Import managers
-import { productManager } from "./daos/productManager.js";
-import { MessagesManager } from "./daos/messagesManager.js";
-import { usersManager } from "./daos/usersManager.js";
+import { productManager } from "./DAL/daos/mongo/products.dao.js";
+import { chatManager } from "./DAL/daos/mongo/chat.dao.js";
 
 
 const app = express();
@@ -52,24 +52,26 @@ app.use("/api/products", routerProduct);
 app.use("/api/carts", routerCart);
 app.use("/api/views", routerViews);
 app.use("/api/sessions", routerSessions);
+app.use("/api/users", routerUsers);
 
-const httpServer = app.listen(8080, () => {console.log("Servidor escuchando en el puerto 8080");});
+const PORT = config.port;
+const httpServer = app.listen(PORT, () => {console.log(`Servidor escuchando en el puerto ${PORT}`);});
 
 const socketServer = new Server(httpServer);
 const messagesTotal = [];
 socketServer.on("connection", async (socket) => {
-  const productosOld = await productManager.getProduct();
+  const productosOld = await productManager.findAll();
   socket.emit("productsInitial", productosOld);
   socket.on("addProduct", async (product) => {
     const producto = await productManager.createOne(product);
-    const productosActualizados = await productManager.getProduct();
+    const productosActualizados = await productManager.findAll();
     socket.emit("productUpdate", productosActualizados);
   });
 
   socket.on("deleteProduct", async (productId) => {
-    const productosOld = await productManager.getProduct();
+    const productosOld = await productManager.findAll();
     const producto = await productManager.deleteOne(+productId);
-    const productosActualizados = await productManager.getProduct();
+    const productosActualizados = await productManager.findAll();
     socket.emit("productDelete", productosActualizados);
   });
 
@@ -80,7 +82,7 @@ socketServer.on("connection", async (socket) => {
   //Chat
   socket.on("message", async (info) => {
     messagesTotal.push(info);
-    const messageTotal = await MessagesManager.createOneMessage(info);
+    const messageTotal = await chatManager.createOne(info);
     socketServer.emit("chatTotal", messagesTotal)
   })
 });

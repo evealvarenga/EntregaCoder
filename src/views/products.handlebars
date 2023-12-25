@@ -1,15 +1,28 @@
+ <h1 class="text-center mt-5 mb-5">Productos</h1>
+  <section class="container d-flex flex-wrap justify-content-center gap-5" id="main_container">
+    {{#if user}}
+    <div class="container text-center">
+    <a href="#" onclick="location.href='/api/views/carts/{{user.cart}}'" class="sessionButton"><button class="btn btn-outline-warning" type="button" data-bs-toggle="offcanvas" aria-controls="offcanvasRight">Carrito</button></a>
+    </div>
+    {{/if}}
+    {{#each productsData}}
+    <div class="card" style="width: 18rem;">
+      <img src="{{thumbnail}}" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h5 class="card-title">{{title}}</h5>
+        <p class="card-text">{{description}}
+        </p>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">Precio: ${{price}}</li>
+        <li class="list-group-item">
+          <center>
+            <botton class="btn btn-outline-warning" data-product-id="{{_id}}" onclick="addToCart('{{../user.cart}}', '{{_id}}')">Comprar</botton>
+          </center>
+        </li>
+      </ul>
+    </div>
+    {{/each}}
+  </section>
 
-<h2>Productos</h3>
-
-{{#each productsData}}
-  <h3>{{title}}</h2>
-  <p>{{description}}</p>
-  <p> $:{{price}}</p>
-  <p> Código:{{code}}</p>
-  <p> Stock:{{stock}}</p>
-  <p> {{thumbnails}}</p>
-  <p> {{_id}}</p>
-{{/each}}
-
-
-
+  <script src="../public/js/index.js"></script>

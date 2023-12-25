@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { usersManager } from "../daos/usersManager.js";
-import { hashData, generateToken } from "../utils.js";
+import { usersManager } from "../DAL/daos/mongo/users.dao.js";
+import { hashData, generateToken } from "../utils/utils.js";
 import passport from "passport";
 
 const router = Router();
@@ -58,27 +58,26 @@ router.post("/signup",
       name,
       last_name,
       email
-    }); 
+    });
     res.cookie("token", token, { maxAge: 60000, httpOnly: true })
-    const admin = email === "adminCoder@coder.com" ? true : false
-    req.session.user = { email, name, last_name, cart: null, admin }
+    const role = email === "adminCoder@coder.com" ? "ADMIN" : "USER"
+    req.session.user = { email, name, last_name, cart: null, role }
     res.redirect("/api/views/products")
   });
- 
+
 router.post("/login",
   passport.authenticate("login",
-    {
-      failureRedirect: "/api/views/error"
-    }), (req, res) => {
-      const {name, last_name, email} = req.user
-      const token = generateToken({
-        name,
-        last_name,
-        email
-      }); 
-      res.cookie("token", token, { maxAge: 60000, httpOnly: true })
-      return res.redirect("/api/sessions/current")
+    { failureRedirect: "/api/views/error" }),
+  (req, res) => {
+    const { name, last_name, email } = req.user
+    const token = generateToken({
+      name,
+      last_name,
+      email
     });
+    res.cookie("token", token, { maxAge: 60000, httpOnly: true })
+    res.redirect("/api/views/products")
+  });
 
 router.get("/signout", async (req, res) => {
   req.session.destroy(() => { res.redirect("/api/views/login") })
@@ -112,10 +111,10 @@ router.get("/callback",
     res.redirect("/api/views/products")
   });
 
-router.get("/current", passport.authenticate("current", { session: false }), (req, res) => {
+/*router.get("/current", passport.authenticate("current", { session: false }), (req, res) => {
   const user = req.user
   res.json({ message: user })
-});
+});*/
 
 
 export default router;

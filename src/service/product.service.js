@@ -1,27 +1,32 @@
-import { productManager } from "../daos/productManager.js";
+import { productManager } from "../DAL/daos/mongo/products.dao.js";
 
+class ProductService{
+    async findAll(){
+        let products = await productManager.findAll(req.query)
+        let productsDB = products.payload
+        const productsObject = productsDB.map(p => p.toObject());
+        return productsObject
+        /*res.render("products", {
+            productsData: productsObject
+          });
+        return productManager.findAll();*/
+    }
 
-export const findAll = () => {
-    const products = productManager.findAll();
-    return products;
-};
+    async findById(id){
+        return productManager.findById(id);
+    }
 
-export const findById = (id) => {
-    const product = productManager.findById(id);
-    return product;
-};
+    async createOne(obj){
+        return productManager.createOne(obj);
+    }
 
-export const createOne = (obj) => {
-    const createdProduct = productManager.createOne(obj);
-    return createdProduct;
-};
+    async deleteOneProduct(pid){
+        return productManager.deleteOne(pid);
+    }
 
-export const deleteOneProduct = (pid) => {
-    const productDelete = productManager.deleteOne(pid);
-    return productDelete;
-};
+    async updateProduct(pid, obj){
+        return productManager.updateOne(pid, obj);
+    }
+}
 
-export const updateProduct = (pid, obj) => {
-    const productModific = productManager.updateOne( pid, obj);
-    return productModific;
-};
+export const productService = new ProductService()

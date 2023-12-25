@@ -1,4 +1,17 @@
-<h2>WELCOME {{user.name}}</h2>
-<h4>Your email is: {{user.email}} </h4>
-
-<button><a href="/api/products">Ver Productos</a></button><button><a href="/api/sessions/signout">SIGN OUT</a></button>
+<h3>Hola, {{user.name}}</h3>
+<div style="align: center; width: 500px">
+    <b>Email: {{user.email}} </b> <br>
+    <b>Tipo de usuario: {{user.role}} </b>
+</div>
+  <div class="container text-center">
+    <div class="row justify-content-md-center">
+      <div class="col-md-auto">
+        <a href="#" onclick="location.href='/api/views/products'" class="sessionButton"><button class="btn btn-outline-warning" type="button" data-bs-toggle="offcanvas" aria-controls="offcanvasRight">Ver Productos</button></a>
+      </div>
+      <div class="col-md-auto">
+        <a href="#" onclick="location.href='/api/sessions/signout'" class="sessionButton">
+        <button class="btn btn-outline-warning" type="button" data-bs-toggle="offcanvas" aria-controls="offcanvasRight">Cerrar sesión</button>
+        </a>
+      </div>
+    </div>
+  </div>

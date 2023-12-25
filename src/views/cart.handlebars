@@ -1,15 +1,28 @@
-<div>
+<h3>Tu carrito</h3>
 
+{{#if product.lenght}}
+  <section class="container d-flex flex-wrap justify-content-center gap-5" id="main_container">
+    {{#each products}}
+      <div class="card border-warning mb-3" style="max-width: 18rem;">
+        <div class="card-header">{{product.title}}</div>
+          <div class="card-body">
+            <p class="card-text">{{product.description}}</p>
+            <p class="card-text"><small class="text-muted">
+            <botton class="btn btn-outline-warning" onclick="deleteOne('{{cid}}','{{product._id}}','{{product}}')">-
+            </botton> <button type="button" class="btn btn-warning" disabled>{{quantity}}</button>
+            <botton class="btn btn-outline-warning" onclick="addProductToCart('{{cid}}','{{product._id}}','{{product}}')">+</botton></small></p>
+          </div>
+        <div>
+      </div>
+    {{/each}}
+    <h2> TOTAL: {{cid.totalPrice}}</h2>
+        <button class="btn btn-outline-warning" data-product-id="{{product._id}}" onclick="deleteAll('{{cid}}')">Vaciar carrito</button>
+        <button class="btn btn-outline-warning" type="button" >COMPRAR</button>
+  </section>
+{{else}}
+  <div class="container text-center">
+    <b>No se encontraron productos en tu carrito.</b>
+  </div>
+{{/if}}
 
-  {{#each cartData}}
-  <h2>{{product.title}}</h2>
-  <p> Descripción:{{product.description}}</p>
-  <p> $:{{product.price}}</p>
-  <p> Código:{{code}}</p>
-  <p> {{thumbnails}}</p>
-  <p> ID:{{product._id}}</p>
-  <p> Cantidad:{{quantity}}</p>
-  {{/each}}
-
-
-</div>
+<script src="../public/js/cart.js"></script>

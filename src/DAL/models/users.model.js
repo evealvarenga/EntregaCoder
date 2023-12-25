@@ -1,4 +1,4 @@
-import { Schema, model} from "mongoose";
+import mongoose, { Schema, model} from "mongoose";
 
 const usersSchema = new Schema({
     name: {
@@ -31,7 +31,8 @@ const usersSchema = new Schema({
         default: "USER"
     },
     cart:{
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "carts"
     }
 });
 

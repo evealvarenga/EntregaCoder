@@ -1,24 +1,18 @@
-import { cartsModel } from "../db/models/carts.model.js"
+import BasicMongo from "./basic.dao.js";
+import { cartsModel } from "../../models/carts.model.js";
 
-class CartManager {
-    constructor() {
-        this.path = "src/cart.json";
+class CartManager extends BasicMongo{
+    constructor(){
+        super(cartsModel)
     }
 
-    async findAllCart() {
-        const response = await cartsModel.find();
-        return response;
-    };
-
     async findCartById(idCart) {
-        const response = await cartsModel.findById(idCart).populate("products.product");
-        return response;
+        return await cartsModel.findById(idCart).populate("products.product");
     };
 
     async createOneCart() {
         const newCart = { products: [] };
-        const response = await cartsModel.create(newCart);
-        return response;
+        return await cartsModel.create(newCart);
     };
 
     async addProductToCart(idCart, idProduct) {
@@ -36,33 +30,25 @@ class CartManager {
     };
 
     async addProductToCartQuantity(idCart, idProduct, quantity) {
-
         const cart = await cartsModel.findById(idCart);
-
         const productIndex = cart.products.findIndex(
             (item) => item.product.equals(idProduct)
         );
-
         if (productIndex !== -1) {
-
             cart.products[productIndex].quantity = quantity;
         } else {
             cart.products.push({ product: idProduct, quantity: 1 });
         }
-
         return cart.save()
-
     };
 
     async updateCart(cartId, newProductBody) {
-
         const cartById = await cartsModel.findById(cartId);
         const newProduct = newProductBody;
         console.log(cartById.products);
         cartById.products = newProduct;
         await cartById.save()
         return cartById
-
     };
 
     async deleteCartById(idCart) {
@@ -82,8 +68,6 @@ class CartManager {
         cart.products.splice(productIndex, 1);
         await cart.save();
         return cart;
-
-
     };
 
     async deleteTotalProductToCart(idCart) {
