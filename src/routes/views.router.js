@@ -48,8 +48,10 @@ router.get("/carts/:cartId", async (req, res) => {
     }
     let cartArray = cart.products;
     const cartArrayObject = cartArray.map(doc => doc.toObject());
+    let { name } = await req.user
     res.render("cart", {
-      cartData: cartArrayObject
+      cartData: cartArrayObject,
+      user: { name },
     });
   } catch (error) {
     res.status(500).send('Error interno')
