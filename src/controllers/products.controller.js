@@ -1,13 +1,15 @@
 import { productService } from "../service/product.service.js";
+import { productMock } from "../mock/productMock.js";
+import { CustomError } from "../errors/errors.generator.js";
+import { errorsMessages } from "../errors/errors.enum.js";
 
 export const findProductById = async (req, res) => {
     const { pid } = req.params;
     try {
         const product = await productService.findById(pid);
         if (!product) {
-            return res
-            .status(404)
-            .json({ message: "Product not found with the id provided" });
+            //return res.status(404).json({ message: "Product not found with the id provided" });
+            return CustomError.generateError(errorsMessages.PRODUCT_NOT_FOUND,404)
         }
         res.status(200).json({ message: "Product found", product });
         } catch (error) {
@@ -42,9 +44,8 @@ export const deleteOneProdAll = async (req, res) => {
     try {
         const response = await productService.deleteOneProduct(pid);
         if (!response) {
-            return res
-            .status(404)
-            .json({ message: "Product not found with the id provided" });
+            //return res.status(404).json({ message: "Product not found with the id provided" });
+            return CustomError.generateError(errorsMessages.PRODUCT_NOT_FOUND,404)
         }
         res.status(200).json({ message: "Product deleted" });
         } catch (error) {
@@ -57,12 +58,21 @@ export const updateProducts = async (req, res) => {
     try {
         const response = await productService.updateProduct(pid, req.body);
         if (!response) {
-            return res
-            .status(404)
-            .json({ message: "Product not found with the id provided" });
+            //return res.status(404).json({ message: "Product not found with the id provided" });
+            return CustomError.generateError(errorsMessages.PRODUCT_NOT_FOUND,404)
         }
         res.status(200).json({ message: "Product updated", response });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 }
+
+export const productMocksController = async (req, res, next) => {
+    try {
+        const mockData = productMock();
+  
+        res.status(200).json({ message: "Product created successfully", mockData });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }

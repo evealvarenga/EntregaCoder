@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { findProductById, findAllProduct, createOneProduc, deleteOneProdAll, updateProducts } from "../controllers/products.controller.js";
+import { findProductById, findAllProduct, createOneProduc, deleteOneProdAll, updateProducts, productMocksController } from "../controllers/products.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 //import { productManager } from "../db/manager/productManager.js";
@@ -11,6 +11,7 @@ router.get("/:pid", findProductById)
 router.post("/", authMiddleware(["ADMIN"]), createOneProduc)
 router.delete("/:pid", authMiddleware(["ADMIN"]), deleteOneProdAll)
 router.put("/:pid", authMiddleware(["ADMIN"]), updateProducts)
+router.get("/mock/mockingproducts", productMocksController)
 
 /*
 router.get("/", async (req, res) => {

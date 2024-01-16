@@ -13,8 +13,9 @@ export const createOne = (obj) => {
     return cartManager.createOneCart(obj)
 }
 
-export const addProductToCart = (cid, pid) => {
-    return cartManager.addProductToCart(cid, pid)
+export const addProductToCart = async (cid, pid) => {
+    const response = await cartManager.addProductToCart(cid, pid)
+    return response
 }
 
 export const deleteOne = (cid, pid) => {

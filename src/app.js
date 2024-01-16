@@ -9,6 +9,7 @@ import "./config/configDB.js"
 import passport from "passport";
 import "./config/passport.js"
 import config from "./config/config.js"
+import { errorMiddleware } from "./middlewares/errors.middleware.js";
 
 //Import Routers
 import routerProduct from "./routes/products.router.js";
@@ -53,6 +54,7 @@ app.use("/api/carts", routerCart);
 app.use("/api/views", routerViews);
 app.use("/api/sessions", routerSessions);
 app.use("/api/users", routerUsers);
+app.use(errorMiddleware);
 
 const PORT = config.port;
 const httpServer = app.listen(PORT, () => {console.log(`Servidor escuchando en el puerto ${PORT}`);});

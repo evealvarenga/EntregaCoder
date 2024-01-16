@@ -9,7 +9,7 @@ router.post("/", authMiddleware(["USER"]) ,createOneCart)
 router.get("/:cid", findCartById)
 router.get("/:cid/purchase", cartBuy)
 router.put("/:cid/products/:pid",authMiddleware(["USER"]) , updateCartQuantity)
-router.post("/:cid/products/:pid",authMiddleware(["USER"]) , addProductCart)
+router.post("/:cid/products/:pid", addProductCart)
 router.delete("/:cid/products/:pid",authMiddleware(["USER"]) , deleteOneProdCart)
 router.delete("/:cid",authMiddleware(["USER"]) , deleteOneCartAll)
 

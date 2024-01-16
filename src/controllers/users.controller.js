@@ -1,10 +1,13 @@
 import { UsersService } from "../service/users.service.js"
+import { CustomError } from "../errors/errors.generator.js";
+import { errorsMessages } from "../errors/errors.enum.js";
 
 
 export const findUserById = async (id) => {
     const user = await UsersService.findById(id);
     if (!user) {
-        return res.status(404).json({ message: "No User found with the id" });
+        CustomError.generateError(errorsMessages.USER_NOT_FOUND, 404)
+        //return res.status(404).json({ message: "No User found with the id" });
     }
     return user
 };
@@ -12,7 +15,8 @@ export const findUserById = async (id) => {
 export const findUserByEmail = async (mail) => {
     const user = await UsersService.findByEmail(mail);
     if (!user) {
-        return res.status(404).json({ message: "No User found with the id" });
+        CustomError.generateError(errorsMessages.USER_NOT_FOUND, 404)
+        //return res.status(404).json({ message: "No User found with the id" });
     }
     return user
 };

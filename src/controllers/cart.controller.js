@@ -3,13 +3,16 @@ import { productService } from "../service/product.service.js";
 import { cartManager } from "../DAL/daos/mongo/carts.dao.js";
 import { createOneTicket } from "./ticket.controller.js";
 import { v4 as uuidv4 } from "uuid";
+import { CustomError } from "../errors/errors.generator.js";
+import { errorsMessages } from "../errors/errors.enum.js";
 
 export const findCartById = async (req,res) => {
     const { cid } = req.params
     try {
         const cart = await findById (cid)
         if (!cart) {
-            return res.status(400).json({ message: "Cart not found" });
+            //return res.status(400).json({ message: "Cart not found" });
+            return CustomError.generateError(errorsMessages.CART_NOT_FOUND,404)
         }
         res.status(200).json({ message: "Cart found", cart });
     } catch (error) {
@@ -22,7 +25,8 @@ export const findAllC = async (req, res) => {
     try {
         const carts = await findAllCart();
         if (!carts || carts.length === 0) {
-            return res.status(404).json({ message: "No carts found" });
+            //return res.status(404).json({ message: "No carts found" });
+            return CustomError.generateError(errorsMessages.CART_NOT_FOUND,404)
         }
         res.status(200).json({ message: "Carts found", carts });
     } catch (error) {

@@ -1,10 +1,10 @@
 <h3>Tu carrito</h3>
 
-{{#if product.lenght}}
+{{#if cartArrayObject.lenght}}
   <section class="container d-flex flex-wrap justify-content-center gap-5" id="main_container">
-    {{#each products}}
+    {{#each cartArrayObject}}
       <div class="card border-warning mb-3" style="max-width: 18rem;">
-        <div class="card-header">{{product.title}}</div>
+        <div class="card-header">{{cartArrayObject.title}}</div>
           <div class="card-body">
             <p class="card-text">{{product.description}}</p>
             <p class="card-text"><small class="text-muted">
