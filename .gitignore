@@ -1,9 +1,6 @@
 #Ingnorar carpeta node_modules
 node_modules
 
-#Ignorar archivos relacionados con claves de una API
-.env
-
 #Drive
 .tmp.driveupload
 .tmp.drivedownload

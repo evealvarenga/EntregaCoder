@@ -2,6 +2,7 @@ import { Router } from "express";
 import { productManager } from "../DAL/daos/mongo/products.dao.js";
 import { cartManager } from "../DAL/daos/mongo/carts.dao.js"
 import { authMiddleware } from "../middlewares/auth.middleware.js";
+import { logger } from "../logger.js";
 
 const router = Router();
 
@@ -20,7 +21,7 @@ router.get("/realtimeproducts", async (req, res) => {
 });
 
 
-router.get("/chat",authMiddleware(["USER"]) , async (req, res) => {
+router.get("/chat", authMiddleware(["USER"]), async (req, res) => {
   res.render("chat");
 });
 
@@ -43,7 +44,7 @@ router.get("/carts/:cartId", async (req, res) => {
   const { cartId } = req.params
   try {
     let cart = await cartManager.findCartById(cartId);
-    if(!cart){
+    if (!cart) {
       return res.status(404).send('Carrito no encontrado')
     }
     let cartArray = cart.products;
@@ -88,4 +89,16 @@ router.get("/error", async (req, res) => {
 router.get("/restaurar", (req, res) => {
   res.render("restaurar");
 })
+
+router.get("/loggerTest", async (req, res) => {
+  logger.error("PROBANDO LOGGER ERROR")
+  logger.fatal("PROBANDO LOGGER FATAL")
+  logger.warning("PROBANDO LOGGER WARNING")
+  logger.http("PROBANDO LOGGER HTTP")
+  logger.debug("PROBANDO LOGGER DEBUG")
+  logger.info("PROBANDO LOGGER INFO")
+
+  res.render("logger")
+})
+
 export default router;
