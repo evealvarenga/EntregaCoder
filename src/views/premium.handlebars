@@ -1,0 +1,31 @@
+<h1>Opción premium</h1>
+<br> <br>
+El rol actual de tu cuenta es: {{user.role}}<br>
+¿Deseas cambiar tu rol?<br>
+<div class="container text-center">
+    <div class="row justify-content-md-center">
+        <div class="col-md-auto">
+            <form id="changeRoleForm">
+                <div class="col-md-auto">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="text" class="form-control" name="email" id="email" aria-describedby="emailHelp">
+
+                    <label for="email" class="form-label">Rol:</label>
+                    <select class="form-select" aria-label="Default select example" id="role" name="role">
+                        <option value="USER">Usuario</option>
+                        <option value="PREMIUM">Premium</option>
+                    </select>
+                    <input type="hidden" name="_id" id="_id" value="{{user._id}}">
+                    <div class="col-md-auto">
+                        <button class="btn btn-outline-warning" type="button" data-bs-toggle="offcanvas"
+                            data-bs-target="#Side_carrito" aria-controls="offcanvasRight"
+                            onclick="changeUserRole()">Cambiar Rol</button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="../public/js/premium.js"></script>

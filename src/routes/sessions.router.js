@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { usersManager } from "../DAL/daos/mongo/users.dao.js";
 import { hashData, generateToken } from "../utils/utils.js";
+import { transporter } from "../utils/nodemailer.js"
 import passport from "passport";
 
 const router = Router();
@@ -111,10 +112,19 @@ router.get("/callback",
     res.redirect("/api/views/products")
   });
 
-/*router.get("/current", passport.authenticate("current", { session: false }), (req, res) => {
-  const user = req.user
-  res.json({ message: user })
-});*/
+router.post("/recover", async (req, res) => {
+  const { email} = req.body
+  const mailOptions = {
+    from: "Lyn",
+    to: email,
+    subject: "Recupero de contraseña",
+    html: "<h1>prueba</h1>"
+  }
+  console.log(mailOptions);
+  await transporter.sendMail(mailOptions)
+  res.send("Mail enviado");
+
+})
 
 
 export default router;

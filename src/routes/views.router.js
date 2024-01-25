@@ -2,7 +2,7 @@ import { Router } from "express";
 import { productManager } from "../DAL/daos/mongo/products.dao.js";
 import { cartManager } from "../DAL/daos/mongo/carts.dao.js"
 import { authMiddleware } from "../middlewares/auth.middleware.js";
-import { logger } from "../logger.js";
+import { logger } from "../utils/logger.js";
 
 const router = Router();
 
@@ -99,6 +99,15 @@ router.get("/loggerTest", async (req, res) => {
   logger.info("PROBANDO LOGGER INFO")
 
   res.render("logger")
+})
+
+router.get("/recoverMail", async (req, res) => {
+  res.render("recover")
+});
+
+router.get("/premium", async (req, res) => {
+  const { name, role, _id } = await req.user;
+  res.render("premium", { user: { name, role, _id } });
 })
 
 export default router;

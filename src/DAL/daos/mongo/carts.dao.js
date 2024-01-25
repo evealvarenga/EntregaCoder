@@ -45,7 +45,6 @@ class CartManager extends BasicMongo{
     async updateCart(cartId, newProductBody) {
         const cartById = await cartsModel.findById(cartId);
         const newProduct = newProductBody;
-        console.log(cartById.products);
         cartById.products = newProduct;
         await cartById.save()
         return cartById

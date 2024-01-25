@@ -58,7 +58,6 @@ export const updateProducts = async (req, res) => {
     try {
         const response = await productService.updateProduct(pid, req.body);
         if (!response) {
-            //return res.status(404).json({ message: "Product not found with the id provided" });
             return CustomError.generateError(errorsMessages.PRODUCT_NOT_FOUND,404)
         }
         res.status(200).json({ message: "Product updated", response });

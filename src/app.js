@@ -10,7 +10,7 @@ import passport from "passport";
 import "./config/passport.js"
 import config from "./config/config.js"
 import { errorMiddleware } from "./middlewares/errors.middleware.js";
-import { logger } from "./logger.js";
+import { logger } from "./utils/logger.js";
 
 //Import Routers
 import routerProduct from "./routes/products.router.js";

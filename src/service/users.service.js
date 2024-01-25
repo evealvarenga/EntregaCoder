@@ -21,6 +21,15 @@ class UserService {
     async findByEmail(id){
         return usersManager.findByEmail(id)
     }
+
+    async updateUser(id, obj){
+        try {
+            const userModific = await Users.updateOne({ _id: id }, obj);
+            return userModific;
+        } catch (error) {
+            throw new Error(`Error updating user: ${error.message}`);
+        }
+    }
 }
 
 export const UsersService = new UserService()

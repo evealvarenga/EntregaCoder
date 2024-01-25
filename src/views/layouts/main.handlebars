@@ -28,9 +28,6 @@
                 <div>
                     {{#if user}}
                     <b style="color: white;">Hola, <a href="#" onclick="location.href='/api/views/profile'" class="sessionButton">{{user.name}}</a></b>
-                    {{#if user.admin}}
-                    (Admin)
-                    {{/if}}
                     {{else}}
                     {{#if user}}
                     <a href="#" onclick="location.href='/api/sessions/signout'" class="sessionButton"><button
