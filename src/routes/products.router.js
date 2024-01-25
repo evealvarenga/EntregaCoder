@@ -8,7 +8,7 @@ const router = Router();
 
 router.get("/", findAllProduct)
 router.get("/:pid", findProductById)
-router.post("/", authMiddleware(["ADMIN"]), createOneProduc)
+router.post("/", authMiddleware(["ADMIN", "PREMIUM"]), createOneProduc)
 router.delete("/:pid", authMiddleware(["ADMIN"]), deleteOneProdAll)
 router.put("/:pid", authMiddleware(["ADMIN"]), updateProducts)
 router.get("/mock/mockingproducts", productMocksController)

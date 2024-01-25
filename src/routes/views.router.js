@@ -20,11 +20,9 @@ router.get("/realtimeproducts", async (req, res) => {
   res.render("realTimeProducts");
 });
 
-
 router.get("/chat", authMiddleware(["USER"]), async (req, res) => {
   res.render("chat");
 });
-
 
 router.get("/products", async (req, res) => {
   if (!req.session.passport) {
@@ -65,7 +63,6 @@ router.get("/login", async (req, res) => {
   }
   res.render("login")
 });
-
 
 router.get("/signup", async (req, res) => {
   if (req.session.user) {
@@ -109,5 +106,11 @@ router.get("/premium", async (req, res) => {
   const { name, role, _id } = await req.user;
   res.render("premium", { user: { name, role, _id } });
 })
+
+router.get ("/createProduct", authMiddleware(["ADMIN", "PREMIUM"]), async (req, res) => {
+  const { name, role, _id } = await req.user;
+  res.render("createProducts", { user: { name, role, _id } });
+})
+  
 
 export default router;
