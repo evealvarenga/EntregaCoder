@@ -1,13 +1,21 @@
 <h1>Recuperar cuenta</h1>
 <br> <br>
-<form action="/api/sessions/restaurar" method="post" id="Form Login">
-
-    Mail:
-    <input type="email" name="email" id="email" /> <br>
-
-    Nueva contraseña:
-    <input type="password" name="password" id="password" /><br>
-
-    <input type="submit" value="Restaurar" />
-
-</form>
+<div class="mb-3">
+    <form action="/api/sessions/restaurar" method="post" id="Form Login">
+        <div class="input-group flex-nowrap">
+            <span class="input-group-text" id="addon-wrapping">Mail: </span>
+            <input type="email" name="email" id="email" class="form-control"
+                placeholder="No compartiremos tu correo con nadie." aria-label="Username"
+                aria-describedby="addon-wrapping">
+        </div>
+        <div class="input-group flex-nowrap">
+            <span class="input-group-text" id="addon-wrapping">Nueva contraseña: </span>
+            <input type="password" name="password" id="password" class="form-control" aria-label="Username"
+                aria-describedby="addon-wrapping">
+        </div>
+        <input type="hidden" name="token" id="token" value="{{token}}">
+        <div class="input-group flex-nowrap">
+            <button class="btn btn-outline-warning" type="submit" data-bs-toggle="offcanvas"
+                aria-controls="offcanvasRight">Restaurar</button>
+    </form>
+</div>

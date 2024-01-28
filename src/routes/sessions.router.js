@@ -89,20 +89,30 @@ router.get("/signout", async (req, res) => {
 });
 
 router.post("/restaurar", async (req, res) => {
-  const { email, password } = req.body
+  const { email, password, token } = req.body
+  if (!email || !password) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
   try {
+    const deco = jwt.verify(token, SECRET_KEY_JWT);
+    const timestamp = deco.iat;
+    const currentTime = Math.floor(Date.now() / 1000);
+    const expirationTime = timestamp + 60 * 60;
+    if (currentTime > expirationTime) {
+        return res.status(403).json({ error: 'El enlace ha caducado.' });
+    }
     const user = await usersManager.findByEmail(email);
     if (!user) {
-      return res.redirect("/api/views/login")
+        return res.redirect("/api/session/signup");
     }
-    const hashPassword = await hashData(password)
-    user.password = hashPassword;
-    await user.save()
-    res.status(200).json({ message: "User update" });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-})
+    const hashedPassword = await hashData(password);
+    user.password = hashedPassword;
+    await user.save();
+    res.redirect("/api/views/login");
+} catch (error) {
+    res.status(500).json({ error: 'Hubo un error interno en el servidor.' });
+}
+});
 
 router.get("/auth/github", passport.authenticate("github", { scope: ['user:email'] }))
 
@@ -123,13 +133,18 @@ router.post("/recover", async (req, res) => {
     if (!user) {
       return res.redirect("/api/session/signup");
     }
-    const token = jwt.sign({ email }, SECRET_KEY_JWT, { expiresIn: '1h' }); 
+    const token = jwt.sign({ email }, SECRET_KEY_JWT, { expiresIn: '1h' });
 
     await transporter.sendMail({
-      from: "ealvarenga095@gmail.com",
+      from: "Entrega Coderhouse - Alvarenga",
       to: email,
       subject: "Recuperacion de contraseña",
-      html: `<b>Por favor haga clic en el siguiente link para restablecer su contraseña http://localhost:8080/api/views/restaurar?token=${token} </b>`,
+      html: `<b>Por favor haga clic en el siguiente link para restablecer su contraseña </br> </br>
+          <a href="http://localhost:8080/api/views/restaurar?token=${token}" class="sessionButton">
+            <button class="btn btn-outline-warning" type="button" data-bs-toggle="offcanvas" data-bs-target="#Side_carrito"
+            aria-controls="offcanvasRight">Restaurar contraseña</button>
+          </a>
+       </b>`,
     });
 
     res.status(200).json({ success: 'Mail enviado con éxito' });
@@ -137,17 +152,6 @@ router.post("/recover", async (req, res) => {
     console.error("Error al enviar el correo:", error);
     res.status(500).json({ error: 'Hubo un error interno en el servidor.' });
   }
-  /*const { email} = req.body
-  const mailOptions = {
-    from: "Lyn",
-    to: email,
-    subject: "Recupero de contraseña",
-    html: "<h1>prueba</h1>"
-  }
-  console.log(mailOptions);
-  await transporter.sendMail(mailOptions)
-  res.send("Mail enviado");*/
-
 })
 
 
