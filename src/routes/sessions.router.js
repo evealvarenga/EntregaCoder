@@ -2,7 +2,11 @@ import { Router } from "express";
 import { usersManager } from "../DAL/daos/mongo/users.dao.js";
 import { hashData, generateToken } from "../utils/utils.js";
 import { transporter } from "../utils/nodemailer.js"
+import config from "../config/config.js"
 import passport from "passport";
+import jwt from 'jsonwebtoken';
+
+const SECRET_KEY_JWT = config.secret_jwt
 
 const router = Router();
 
@@ -113,7 +117,27 @@ router.get("/callback",
   });
 
 router.post("/recover", async (req, res) => {
-  const { email} = req.body
+  const { email } = req.body;
+  try {
+    const user = await usersManager.findByEmail(email);
+    if (!user) {
+      return res.redirect("/api/session/signup");
+    }
+    const token = jwt.sign({ email }, SECRET_KEY_JWT, { expiresIn: '1h' }); 
+
+    await transporter.sendMail({
+      from: "ealvarenga095@gmail.com",
+      to: email,
+      subject: "Recuperacion de contraseña",
+      html: `<b>Por favor haga clic en el siguiente link para restablecer su contraseña http://localhost:8080/api/views/restaurar?token=${token} </b>`,
+    });
+
+    res.status(200).json({ success: 'Mail enviado con éxito' });
+  } catch (error) {
+    console.error("Error al enviar el correo:", error);
+    res.status(500).json({ error: 'Hubo un error interno en el servidor.' });
+  }
+  /*const { email} = req.body
   const mailOptions = {
     from: "Lyn",
     to: email,
@@ -122,7 +146,7 @@ router.post("/recover", async (req, res) => {
   }
   console.log(mailOptions);
   await transporter.sendMail(mailOptions)
-  res.send("Mail enviado");
+  res.send("Mail enviado");*/
 
 })
 

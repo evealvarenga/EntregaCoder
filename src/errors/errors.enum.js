@@ -1,4 +1,5 @@
 const errorsMessages ={
+    ALL_FIELDS: "Todos los campos son requeridos",
     PRODUCT_NOT_FOUND:"Producto no encontrado",
     PRODUCT_ALREADY_EXISTS: "Producto ya existe",
     CART_NOT_FOUND:"Carrito no encontrado",

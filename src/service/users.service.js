@@ -24,8 +24,8 @@ class UserService {
 
     async updateUser(id, obj){
         try {
-            const userModific = await Users.updateOne({ _id: id }, obj);
-            return userModific;
+            const userNew = await usersManager.updateOne({ _id: id }, obj);
+            return userNew;
         } catch (error) {
             throw new Error(`Error updating user: ${error.message}`);
         }

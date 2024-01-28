@@ -5,6 +5,7 @@ import { createOneTicket } from "./ticket.controller.js";
 import { v4 as uuidv4 } from "uuid";
 import { CustomError } from "../errors/errors.generator.js";
 import { errorsMessages } from "../errors/errors.enum.js";
+import config from "../config/config.js"
 
 export const findCartById = async (req,res) => {
     const { cid } = req.params
@@ -49,13 +50,16 @@ export const addProductCart = async (req, res) => {
     try {
         const product = await productService.findById(pid)
         const cartstatus = await findCartById(cid)
-        if(product.stock >= cartstatus.product.quantity){
-            const response = await addProductToCart(cid,pid);
-            res.status(200).json({ message: "Product added to cart", cart: response });
-        }else{
-            res.status(404).json({ message: "Stock insuficiente" });
-        }
-               
+        if (product.owner === req.user.email) {
+            return res.status(404).json({ message: "You cannot add your own products" });
+        } else {
+            if(product.stock >= cartstatus.product.quantity){
+                const response = await addProductToCart(cid,pid);
+                res.status(200).json({ message: "Product added to cart", cart: response });
+            }else{
+                res.status(404).json({ message: "Stock insuficiente" });
+            }
+        }  
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal server error" });
@@ -97,6 +101,7 @@ export const updateCartQuantity = async (req, res) => {
 export const cartBuy = async (req,res) => {
     try {
         const { cid } = req.params;
+        const secret_jwt = config.secret_jwt
         const cart = await cartManager.findCartById(cid);
         const products = cart.products;
         let availableProducts = [];
@@ -115,19 +120,25 @@ export const cartBuy = async (req,res) => {
                 unavailableProducts.push(item);
             }
         }  
+        logger.info("Productos disponibles", availableProducts, "Productos no disponibles", unavailableProducts);
         cart.products = unavailableProducts;
         await cart.save();
+        const token = req.cookie.token
+        const userToken = jwt.verify(token, secret_jwt);
+        logger.info("userticket", userToken);
         if (availableProducts.length) {
             const ticket = {
                 code: generateUniqueCode(),
                 purchase_datetime: new Date(),
                 amount: totalAmount,
-                purchaser: req.user.email,
+                purchaser: userToken.email,
             };
-            await createOneTicket(ticket);
-            return { availableProducts, totalAmount };
+            logger.info("ticket", ticket);
+            const finalTicket = await createOneTicket(ticket);
+            return { availableProducts, totalAmount, finalTicket };
         }
         return { unavailableProducts };
     } catch (error) {
+        logger.error(error)
         res.status(500).json({ error: 'Error interno del servidor' }); 
     }};

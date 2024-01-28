@@ -84,7 +84,8 @@ router.get("/error", async (req, res) => {
 });
 
 router.get("/restaurar", (req, res) => {
-  res.render("restaurar");
+  const { token } = req.query;
+  res.render("restaurar", {  token: token, style:"product" });
 })
 
 router.get("/loggerTest", async (req, res) => {
