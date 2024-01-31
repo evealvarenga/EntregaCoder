@@ -33,7 +33,7 @@ export const createUser = async (user) => {
 
 export const updateUser = async (req, res) => {
     const { _id } = req.params;
-    const { role, email } = req.body;
+    const { role } = req.body;
     try {        
     const userToUpdate = await UsersService.findById(_id);
     if (!userToUpdate) {

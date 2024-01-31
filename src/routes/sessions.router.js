@@ -1,13 +1,14 @@
 import { Router } from "express";
 import { usersManager } from "../DAL/daos/mongo/users.dao.js";
-import { hashData, generateToken } from "../utils/utils.js";
+import { hashData, generateToken, compareData } from "../utils/utils.js";
 import { transporter } from "../utils/nodemailer.js"
+import { CustomError } from "../errors/errors.generator.js";
+import { errorsMessages } from "../errors/errors.enum.js";
 import config from "../config/config.js"
 import passport from "passport";
 import jwt from 'jsonwebtoken';
 
 const SECRET_KEY_JWT = config.secret_jwt
-
 const router = Router();
 
 /*
@@ -94,24 +95,29 @@ router.post("/restaurar", async (req, res) => {
     return res.status(400).json({ error: 'All fields are required' });
   }
   try {
+    const user = await usersManager.findByEmail(email);
+    const samePass = await compareData(password, user.password);
+    if (!user) {
+      return res.redirect("/api/session/signup");
+    }
+    if (samePass) {
+      return res.status(404).json({ error: 'No puedes ingresar una contraseña ya utilizada.' });
+    }
+
     const deco = jwt.verify(token, SECRET_KEY_JWT);
     const timestamp = deco.iat;
     const currentTime = Math.floor(Date.now() / 1000);
-    const expirationTime = timestamp + 60 * 60;
-    if (currentTime > expirationTime) {
-        return res.status(403).json({ error: 'El enlace ha caducado.' });
+    if ((currentTime - timestamp) >= 3600) {
+      return res.status(403).json({ error: 'El enlace ha caducado.' });
     }
-    const user = await usersManager.findByEmail(email);
-    if (!user) {
-        return res.redirect("/api/session/signup");
-    }
+    
     const hashedPassword = await hashData(password);
     user.password = hashedPassword;
     await user.save();
     res.redirect("/api/views/login");
-} catch (error) {
+  } catch (error) {
     res.status(500).json({ error: 'Hubo un error interno en el servidor.' });
-}
+  }
 });
 
 router.get("/auth/github", passport.authenticate("github", { scope: ['user:email'] }))
@@ -133,13 +139,14 @@ router.post("/recover", async (req, res) => {
     if (!user) {
       return res.redirect("/api/session/signup");
     }
-    const token = jwt.sign({ email }, SECRET_KEY_JWT, { expiresIn: '1h' });
+    const token = generateToken({ email })
+    res.cookie('token', token, { maxAge: 3600000, httpOnly: true })
 
     await transporter.sendMail({
       from: "Entrega Coderhouse - Alvarenga",
       to: email,
       subject: "Recuperacion de contraseña",
-      html: `<b>Por favor haga clic en el siguiente link para restablecer su contraseña </br> </br>
+      html: `<b>Por favor haga clic en el siguiente link para restablecer su contraseña </br></br>
           <a href="http://localhost:8080/api/views/restaurar?token=${token}" class="sessionButton">
             <button class="btn btn-outline-warning" type="button" data-bs-toggle="offcanvas" data-bs-target="#Side_carrito"
             aria-controls="offcanvasRight">Restaurar contraseña</button>
