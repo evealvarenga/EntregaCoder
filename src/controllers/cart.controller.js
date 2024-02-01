@@ -51,7 +51,7 @@ export const addProductCart = async (req, res) => {
         const product = await productService.findById(pid)
         const cartstatus = await findCartById(cid)
         if (product.owner === req.user.email) {
-            return res.status(404).json({ message: "You cannot add your own products" });
+            return res.status(404).json({ message: "No puedes agregar tus propios productos." });
         } else {
             if(product.stock >= cartstatus.product.quantity){
                 const response = await addProductToCart(cid,pid);
@@ -70,7 +70,7 @@ export const deleteOneProdCart = async (req, res) => {
     try {
         const { cid, pid } = req.params;
         const response = await deleteOne(cid,pid);
-        res.status(200).json({ message: "Product delete to cart", cart: response });
+        res.status(200).json({ message: "Product delete from cart", cart: response });
 
     } catch (error){
         res.status(500).json({ message: "Internal server error" });

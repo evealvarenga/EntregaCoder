@@ -1,0 +1,195 @@
+paths:
+  /api/carts:
+    get:
+      summary: Find all carts
+      tags:
+        - Carts
+      responses:
+        "200":
+          description: Carts found
+        "500":
+          description: Internal server error
+    
+    post:
+      summary: Create a new cart
+      tags:
+        - Carts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Cart"
+            example:
+              id: __ID001
+              products:
+                - id: __ID002
+                  quantity: 1
+      responses:
+        "200":
+          description: Cart created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+              example:
+                id: __ID001
+                products:
+                  - id: __ID002
+                    quantity: 1
+        "500":
+          description: Internal server error
+
+  /api/carts/{id}:
+    get:
+      summary: Find cart by id
+      tags:
+        - Carts
+      parameters:
+        - name: ID
+          in: path
+          description: Cart identifier
+      responses:
+        "200":
+          description: Cart found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+              example:
+                id: __ID001
+                products:
+                  - id: __ID002
+                    quantity: 1
+        "404":
+          description: Cart not found
+        "500":
+          description: Server error
+    
+    delete:
+      summary: Delete cart by id
+      tags:
+        - Carts
+      parameters:
+        - name: ID
+          in: path
+          description: Cart identifier
+      responses:
+        "200":
+          description: Cart deleted
+        "500":
+          description: Internal server error
+  
+  /api/carts/{id}/products/{id}:
+    post:
+      summary: Add one product to cart
+      tags:
+        - Carts
+      parameters:
+        - name: ID cart
+          in: path
+          description: Cart identifier
+        - name: ID product
+          in: path
+          description: Product identifier
+      responses:
+        "200":
+          description: Product added to cart
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+              example:
+                id: __ID001
+                products:
+                  - id: __ID002
+                    quantity: 1
+        "404":
+          description: No puedes agregar tus propios productos. // Stock insuficiente
+        "500":
+          description: Internal server error
+
+    put:
+      summary: Update quantity product in cart
+      tags:
+        - Carts
+      parameters:
+        - name: ID cart
+          in: path
+          description: Cart identifier
+        - name: ID product
+          in: path
+          description: Product identifier
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Cart"
+            example:
+              quantity: 3
+      responses:
+        "200":
+          description: Cart updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+              example:
+                id: __ID001
+                products:
+                  - id: __ID002
+                    quantity: 2
+        "500":
+          description: Internal server error
+
+    delete:
+      summary: Delete one product from cart
+      tags:
+        - Carts
+      parameters:
+        - name: ID cart
+          in: path
+          description: Cart identifier
+        - name: ID product
+          in: path
+          description: Product identifier
+      responses:
+        "200":
+          description: Product delete from cart
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+              example:
+                id: __ID001
+                products:
+                  - id: __ID002
+                    quantity: 1
+        "500":
+          description: Internal server error
+
+
+
+components:
+  schemas:
+    Product from Cart:
+      type: object
+      properties:
+        id:
+          type: string
+        quantity:
+          type: number
+
+    Cart:
+      type: object
+      properties:
+        id:
+          type: string
+        products:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartProduct"
+      example:
+          id: __ID001
+          products:
+            - id: __ID002
+              quantity: 1

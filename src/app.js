@@ -12,6 +12,10 @@ import config from "./config/config.js"
 import { errorMiddleware } from "./middlewares/errors.middleware.js";
 import { logger } from "./utils/logger.js";
 
+//Swagger
+import { swaggerSetup } from "./utils/swagger.js";
+import swaggerUi from "swagger-ui-express"
+
 //Import Routers
 import routerProduct from "./routes/products.router.js";
 import routerCart from "./routes/cart.router.js";
@@ -55,6 +59,7 @@ app.use("/api/carts", routerCart);
 app.use("/api/views", routerViews);
 app.use("/api/sessions", routerSessions);
 app.use("/api/users", routerUsers);
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSetup))
 app.use(errorMiddleware);
 
 const PORT = config.port;

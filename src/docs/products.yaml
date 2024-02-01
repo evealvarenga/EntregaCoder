@@ -1,0 +1,197 @@
+paths:
+  /api/products:
+    get:
+      summary: Find all products
+      tags:
+        - Products
+      responses:
+        "200":
+          description: All products
+        "500":
+          description: Server error
+    
+    post:
+      summary: Created a new product
+      tags:
+        - Products
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Product"
+            example:
+                id: __ID001
+                title: Iphone 12
+                description: Teléfono marca iphone
+                price: 450
+                stock: 25
+                code: 1234
+                thumbnail: img.jpg
+                status: true
+                owner: ADMIN
+      responses:
+        "200":
+          description: Product created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+              example:
+                id: __ID001
+                title: Iphone 12
+                description: Teléfono marca iphone
+                price: 450
+                stock: 25
+                code: 1234
+                thumbnail: img.jpg
+                status: true
+                owner: ADMIN
+        "400":
+          description: All fields required
+        "500":
+          description: Server error
+
+  /api/products/{pid}:
+    get:
+      summary: Find product by id
+      tags:
+        - Products
+      parameters:
+        - name: id
+          in: path
+          description: Product identifier
+      responses:
+        "200":
+          description: One product found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+              example:
+                id: __ID001
+                title: Iphone 12
+                description: Teléfono marca iphone
+                price: 450
+                stock: 25
+                code: 1234
+                thumbnail: img.jpg
+                status: true
+                owner: ADMIN
+        "500":
+          description: Server error
+
+    delete:
+      summary: Delete product by id
+      tags:
+        - Products
+      parameters:
+        - name: id
+          in: path
+          description: Product identifier
+      responses:
+        "200":
+          description: Product deleted
+        "400":  
+          description: Product not found
+        "500":
+          description: Server error // This product was not created by you
+
+    put:
+      summary: Update product by id
+      tags:
+        - Products
+      parameters:
+        - name: id
+          in: path
+          description: Product identifier
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Product"
+            example:
+                id: __ID001
+                title: Iphone 12
+                description: Teléfono marca iphone
+                price: 450
+                stock: 25
+                code: 1234
+                thumbnail: img.jpg
+                status: true
+                owner: ADMIN
+      responses:
+        "200":
+          description: Product updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+              example:
+                id: __ID001
+                title: Iphone 12
+                description: Teléfono marca iphone
+                price: 450
+                stock: 25
+                code: 1234
+                thumbnail: img.jpg
+                status: true
+                owner: ADMIN
+        "500":
+          description: Server error
+
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        stock:
+          type: number
+        code:
+          type: string
+        thumbnail:
+          type: string
+        status:
+          type: boolean
+        owner:
+          type: string
+      example:
+        id:  __ID001
+        title: Iphone 12
+        description: Teléfono marca iphone
+        price: 450
+        stock: 25
+        code: 1234
+        thumbnail: img.jpg
+        status: true
+        owner: ADMIN
+  requestBodies:
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        stock:
+          type: number
+        code:
+          type: string
+        thumbnail:
+          type: string
+        status:
+          type: boolean
+        owner:
+          type: string
