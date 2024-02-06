@@ -91,19 +91,22 @@ router.get("/signout", async (req, res) => {
 
 router.post("/restaurar", async (req, res) => {
   const { email, password, token } = req.body
-
   //Verificación datos completos
   if (!email || !password) {
     return res.status(400).json({ error: 'All fields are required' });
   }
   try {
-    const user = await usersManager.findByEmail(email);
-    const samePass = await compareData(password, user.password);
     //Verificación de usuario existente
-    if (!user) {
-      return res.redirect("/api/session/signup");
+    console.log(email);
+    const user = await usersManager.findByEmail(email);
+    console.log(user);
+    if (user === null) {
+      console.log("here");
+      return res.redirect("/api/views/signup");
     }
+
     // Verificación de contraseña existente
+    const samePass = await compareData(password, user.password);
     if (samePass) {
       return res.status(404).json({ error: 'No puedes ingresar una contraseña ya utilizada.' });
     }
@@ -116,7 +119,7 @@ router.post("/restaurar", async (req, res) => {
     if ((currentTime - timestamp) >= 3600) {
       return res.status(403).json({ error: 'El enlace ha caducado.' });
     }
-    
+
     //Todo ok
     const hashedPassword = await hashData(password);
     user.password = hashedPassword;

@@ -12,7 +12,7 @@ export const findUserById = async (id) => {
     return user
 };
 
-export const findUserByEmail = async (mail) => {
+export const findUserByEmail = async (mail, req, res) => {
     const user = await UsersService.findByEmail(mail);
     if (!user) {
         CustomError.generateError(errorsMessages.USER_NOT_FOUND, 404)

@@ -19,7 +19,8 @@ class UserService {
     }
 
     async findByEmail(id){
-        return usersManager.findByEmail(id)
+        const user = usersManager.findByEmail(id);
+        return user;
     }
 
     async updateUser(id, obj){
