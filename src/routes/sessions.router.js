@@ -60,6 +60,10 @@ router.post("/signup",
     { failureRedirect: "/api/views/error" }),
   async (req, res) => {
     const { email, name, last_name } = req.user
+    const user = await usersManager.findByEmail(email) 
+    if(user){
+      return res.redirect("/api/views/login")
+    }
     const token = generateToken({
       name,
       last_name,
