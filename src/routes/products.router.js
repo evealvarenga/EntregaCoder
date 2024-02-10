@@ -6,11 +6,11 @@ import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
-router.get("/", findAllProduct)
-router.get("/:pid", findProductById)
-router.post("/", authMiddleware(["ADMIN", "PREMIUM"]), createOneProduc)
-router.delete("/:pid", authMiddleware(["ADMIN"]), deleteOneProdAll)
-router.put("/:pid", authMiddleware(["ADMIN"]), updateProducts)
+router.get("/", passport.authenticate("current",{session:false}), findAllProduct)
+router.get("/:pid", passport.authenticate("current",{session:false}), findProductById)
+router.post("/", passport.authenticate("current",{session:false}), authMiddleware(["ADMIN", "PREMIUM"]), createOneProduc)
+router.delete("/:pid", passport.authenticate("current",{session:false}), authMiddleware(["ADMIN"]), deleteOneProdAll)
+router.put("/:pid", passport.authenticate("current",{session:false}), authMiddleware(["ADMIN"]), updateProducts)
 router.get("/mock/mockingproducts", productMocksController)
 
 /*
