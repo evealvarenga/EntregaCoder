@@ -18,18 +18,35 @@ class UserService {
         return newUser
     }
 
-    async findByEmail(id){
+    async findByEmail(id) {
         const user = usersManager.findByEmail(id);
         return user;
     }
 
-    async updateUser(id, obj){
-        try {
-            const userNew = await usersManager.updateOne({ _id: id }, obj);
-            return userNew;
-        } catch (error) {
-            throw new Error(`Error updating user: ${error.message}`);
+    async updateUser(id, obj) {
+        const userNew = usersManager.updateOne({ _id: id }, obj);
+        return userNew;
+    }
+
+    async saveUserDocuments(id, dni, address, bank) {
+        const obj = {
+            documents: [
+                ...(dni ? [{
+                    name: "DNI",
+                    reference: dni[0].path
+                }] : []),
+                ...(address ? [{
+                    name: "address",
+                    reference: address[0].path
+                }] : []),
+                ...(bank ? [{
+                    name: "bank",
+                    reference: bank[0].path
+                }] : []),
+            ]
         }
+        const saveDocs = usersManager.updateOne(id, obj);
+        return saveDocs
     }
 }
 

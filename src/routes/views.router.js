@@ -79,6 +79,15 @@ router.get("/profile", async (req, res) => {
   res.render("profile", { user: { name, email, role } });
 });
 
+router.get("/documents", async (req, res) => {
+  if (!req.session.passport) {
+    return res.redirect("api/views/login");
+  }
+  const { name, email, _id } = await req.user;
+  res.render("documents", { user: { name, email, _id } });
+});
+
+
 router.get("/error", async (req, res) => {
   res.render("error")
 });

@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { usersManager } from "../DAL/daos/mongo/users.dao.js";
+import { UsersService } from "../service/users.service.js";
 import { hashData, generateToken, compareData } from "../utils/utils.js";
 import { transporter } from "../utils/nodemailer.js"
 import { CustomError } from "../errors/errors.generator.js";
@@ -7,6 +8,7 @@ import { errorsMessages } from "../errors/errors.enum.js";
 import config from "../config/config.js"
 import passport from "passport";
 import jwt from 'jsonwebtoken';
+import { loggers } from "winston";
 
 const SECRET_KEY_JWT = config.secret_jwt
 const router = Router();
@@ -60,8 +62,8 @@ router.post("/signup",
     { failureRedirect: "/api/views/error" }),
   async (req, res) => {
     const { email, name, last_name } = req.user
-    const user = await usersManager.findByEmail(email) 
-    if(user){
+    const user = await usersManager.findByEmail(email)
+    if (user) {
       return res.redirect("/api/views/login")
     }
     const token = generateToken({
@@ -91,6 +93,11 @@ router.post("/login",
 
 router.get("/signout", async (req, res) => {
   req.session.destroy(() => { res.redirect("/api/views/login") })
+  /*
+  const { _id } = req.user;
+  res.clearCookie("token")
+  UsersService.updateUser(_id, { last_connection: new Date() });
+  res.redirect("/api/views/login")*/
 });
 
 router.post("/restaurar", async (req, res) => {

@@ -1,16 +1,17 @@
 import { Router } from "express";
 import { findProductById, findAllProduct, createOneProduc, deleteOneProdAll, updateProducts, productMocksController } from "../controllers/products.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
+import passport from "passport";
 
 //import { productManager } from "../db/manager/productManager.js";
 
 const router = Router();
 
-router.get("/", passport.authenticate("current",{session:false}), findAllProduct)
-router.get("/:pid", passport.authenticate("current",{session:false}), findProductById)
+router.get("/", findAllProduct)
+router.get("/:pid", findProductById)
 router.post("/", passport.authenticate("current",{session:false}), authMiddleware(["ADMIN", "PREMIUM"]), createOneProduc)
-router.delete("/:pid", passport.authenticate("current",{session:false}), authMiddleware(["ADMIN"]), deleteOneProdAll)
-router.put("/:pid", passport.authenticate("current",{session:false}), authMiddleware(["ADMIN"]), updateProducts)
+router.delete("/:pid", passport.authenticate("current",{session:false}), authMiddleware(["ADMIN", "PREMIUM"]), deleteOneProdAll)
+router.put("/:pid", passport.authenticate("current",{session:false}), authMiddleware(["ADMIN", "PREMIUM"]), updateProducts)
 router.get("/mock/mockingproducts", productMocksController)
 
 /*

@@ -1,11 +1,11 @@
-import mongoose, { Schema, model} from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
 
 const usersSchema = new Schema({
     name: {
         type: String,
         required: true
     },
-    last_name: { 
+    last_name: {
         type: String,
         required: true
     },
@@ -21,18 +21,37 @@ const usersSchema = new Schema({
     password: {
         type: String,
     },
-    isGithub:{
+    isGithub: {
         type: Boolean,
         default: false
     },
-    role:{
+    role: {
         type: String,
-        enum: [ "ADMIN", "USER", "PREMIUM"],
+        enum: ["ADMIN", "USER", "PREMIUM"],
         default: "USER"
     },
-    cart:{
+    cart: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "carts"
+    },
+    documents: [{
+        type: [
+            {
+                name: String,
+                reference: String
+            }
+        ],
+        default: []
+
+    }],
+    last_connection: {
+        type: Date,
+        required: true
+    },
+    status:{
+        type: String,
+        enum: ["NULL", "DNI_OK", "BANK_OK", "ADDRESS_OK", "ALL_OK", "DNI_ADDRESS_OK"],
+        default: "NULL"
     }
 });
 
