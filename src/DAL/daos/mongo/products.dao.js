@@ -38,11 +38,6 @@ class ProductManager extends BasicMongo {
 
         return results
     };
-
-    async updateOne(id, obj) {
-        return await productsModel.updateOne({ _id: id }, obj);
-    };
-
 }
 
 export const productManager = new ProductManager()

@@ -34,9 +34,9 @@ export const createUser = async (user) => {
 export const updateUser = async (req, res) => {
     const { _id } = req.params;
     const { role } = req.body;
+    
 
     const userToUpdate = await UsersService.findById(_id);
-
     if (!userToUpdate) {
         return res.status(404).json({ message: "User not found" });
     }

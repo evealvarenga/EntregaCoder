@@ -92,12 +92,11 @@ router.post("/login",
   });
 
 router.get("/signout", async (req, res) => {
-  req.session.destroy(() => { res.redirect("/api/views/login") })
-  /*
   const { _id } = req.user;
-  res.clearCookie("token")
-  UsersService.updateUser(_id, { last_connection: new Date() });
-  res.redirect("/api/views/login")*/
+  const lasco = new Date()
+  console.log(lasco);
+  UsersService.updateUser(_id, { last_connection: lasco });
+  req.session.destroy(() => { res.redirect("/api/views/login") })
 });
 
 router.post("/restaurar", async (req, res) => {

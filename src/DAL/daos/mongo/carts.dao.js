@@ -6,48 +6,50 @@ class CartManager extends BasicMongo{
         super(cartsModel)
     }
 
-    async findCartById(idCart) {
-        return await cartsModel.findById(idCart).populate("products.product");
+    async findCartById(id) {
+        const response = await cartsModel.findById(id).populate("products.product");
+        return response
     };
 
     async createOneCart() {
-        const newCart = { products: [] };
-        return await cartsModel.create(newCart);
+        const cart = { products: [] };
+        const response = await cartsModel.create(cart);
+        return response
     };
 
-    async addProductToCart(idCart, idProduct) {
-        const cart = await cartsModel.findById(idCart);
+    async addProductToCart(idC, idP) {
+        const cart = await cartsModel.findById(idC);
         const productIndex = cart.products.findIndex(
-            (item) => item.product.equals(idProduct)
+            (item) => item.product.equals(idP)
         );
         if (productIndex !== -1) {
             cart.products[productIndex].quantity++;
         } else {
-            cart.products.push({ product: idProduct, quantity: 1 });
+            cart.products.push({ product: idP, quantity: 1 });
         }
         return cart.save()
 
     };
 
-    async addProductToCartQuantity(idCart, idProduct, quantity) {
-        const cart = await cartsModel.findById(idCart);
+    async addProductToCartQuantity(idC, idP, quantity) {
+        const cart = await cartsModel.findById(idC);
         const productIndex = cart.products.findIndex(
-            (item) => item.product.equals(idProduct)
+            (item) => item.product.equals(idP)
         );
         if (productIndex !== -1) {
             cart.products[productIndex].quantity = quantity;
         } else {
-            cart.products.push({ product: idProduct, quantity: 1 });
+            cart.products.push({ product: idP, quantity: 1 });
         }
         return cart.save()
     };
 
-    async updateCart(cartId, newProductBody) {
-        const cartById = await cartsModel.findById(cartId);
-        const newProduct = newProductBody;
-        cartById.products = newProduct;
-        await cartById.save()
-        return cartById
+    async updateCart(idC, obj) {
+        const cart = await cartsModel.findById(idC);
+        const newProduct = obj;
+        cart.products = newProduct;
+        await cart.save()
+        return cart
     };
 
     async deleteCartById(idCart) {

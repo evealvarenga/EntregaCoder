@@ -10,11 +10,6 @@ class UsersManager extends BasicMongo{
         const response = await usersModel.findOne({ email });
         return response;
     };
-
-    async updateOne(id, obj) {
-        const result = await usersModel.updateOne({ _id: id }, obj);
-        return result;
-    };
 }
 
 export const usersManager = new UsersManager()

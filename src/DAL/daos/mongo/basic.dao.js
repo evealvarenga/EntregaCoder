@@ -22,4 +22,9 @@ export default class BasicMongo {
         const response = await this.model.findByIdAndDelete(id)
         return response
     }
+
+    async updateOne(id, obj){
+        const response = await this.model.updateOne({ _id: id }, obj)
+        return response
+    }
 }
