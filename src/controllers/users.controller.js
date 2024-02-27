@@ -72,6 +72,6 @@ export const userDocuments = async (req, res) => {
     if (DNI && address && bank) {
         UsersService.updateUser(id, { status: "ALL_OK" });
     }
-    const response = await UsersService.saveUserDocuments({ id, DNI, address, bank })
+    const response = await UsersService.saveUserDocuments(id, DNI, address, bank)
     res.json({ response }) 
 };
