@@ -14,7 +14,7 @@ router.delete("/:cid/products/:pid",authMiddleware(["USER"]) , deleteOneProdCart
 router.delete("/:cid",authMiddleware(["USER"]) , deleteOneCartAll)
 
 
-/*router.get("/", async (req, res) => {
+/* router.get("/", async (req, res) => {
 
   try {
     const carts = await cartManager.findAllCart()

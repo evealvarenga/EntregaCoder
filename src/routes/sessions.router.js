@@ -92,9 +92,9 @@ router.post("/login",
   });
 
 router.get("/signout", async (req, res) => {
-  const { _id } = req.user;
+  const { _id } = req.user
+  console.log(_id);
   const lasco = new Date()
-  console.log(lasco);
   UsersService.updateUser(_id, { last_connection: lasco });
   req.session.destroy(() => { res.redirect("/api/views/login") })
 });

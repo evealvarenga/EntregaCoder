@@ -1,10 +1,11 @@
 import passport from "passport";
-//import { usersManager } from "../DAL/daos/mongo/users.dao.js";
 import { createUser, findUserByEmail, findUserById } from "../controllers/users.controller.js";
 import { Strategy as localStrategy } from "passport-local";
 import { Strategy as GitHubStrategy } from "passport-github2";
 import { ExtractJwt, Strategy as JWTSrategy } from "passport-jwt";
 import { hashData, compareData } from "../utils/utils.js";
+import { CustomError } from "../errors/errors.generator.js";
+import { errorsMessages } from "../errors/errors.enum.js";
 import config from "./config.js"
 
 const SECRET_KEY_JWT = config.secret_jwt

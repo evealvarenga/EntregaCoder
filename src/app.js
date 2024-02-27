@@ -39,8 +39,6 @@ const MONGO_URI = config.mongo_uri
 app.use(session({ 
   store: new MongoStore({mongoUrl: MONGO_URI}),
   secret: 'secretSession', 
-  resave: false,
-  saveUninitialized: false,
   cookie: { maxAge: 60000 }
 }))
 

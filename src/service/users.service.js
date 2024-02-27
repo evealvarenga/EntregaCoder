@@ -24,7 +24,7 @@ class UserService {
     }
 
     async updateUser(id, obj) {
-        const userNew = usersManager.updateOne({ _id: id }, obj);
+        const userNew = usersManager.updateOne(id, obj);
         return userNew;
     }
 

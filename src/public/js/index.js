@@ -6,7 +6,6 @@ const inputStatus = document.getElementById("status");
 const inputPrice = document.getElementById("price");
 const inputCode = document.getElementById("code");
 const inputStock = document.getElementById("stock");
-const inputCategory = document.getElementById("category");
 const inputThumbnails = document.getElementById("thumbnails");
 const formDelete = document.getElementById("Form delete product");
 const inputIdDelete = document.getElementById("idDelete");
@@ -26,7 +25,6 @@ const listaDeProductosActualizados = (products) => {
               <p>descripcion: ${product.description}</p>
               <p>precio: ${product.price}</p>
               <p>codigo: ${product.code}</p>
-              <p>categoria: ${product.category}</p>
               <p>stock: ${product.stock}</p>
               <p>thumbnails: ${product.thumbnails}</p>
               <p>id: ${product.id}</p>
