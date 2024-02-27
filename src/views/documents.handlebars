@@ -1,6 +1,6 @@
 <h1>Cargar documentación</h1>
 <br> <br>
-<form action="/api/users/{{id}}/documents">
+<form action="/api/users/{{user._id}}/documents" enctype="multipart/form-data" method="post"  id="Form upload documents">
     DNI: <input type="file" name="DNI" id="DNI"> <br>
     DIRECCIÓN: <input type="file" name="address" id="address"> <br>
     BANCO: <input type="file" name="bank" id="bank"> <br>

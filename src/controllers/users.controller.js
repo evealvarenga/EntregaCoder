@@ -62,9 +62,9 @@ export const updateUser = async (req, res) => {
 }
 
 export const userDocuments = async (req, res) => {
-    const { id } = req.params
-    const { DNI, address, bank } = req.files
-    if (DNI && address) {
+    const { id } = await req.params
+    const { DNI, address, bank } = await req.files
+   if (DNI && address) {
         UsersService.updateUser(id, { status: "DNI_ADDRESS_OK" });
     } else {
         return res.status(400).json({ message: "All fields are required" });
@@ -72,6 +72,6 @@ export const userDocuments = async (req, res) => {
     if (DNI && address && bank) {
         UsersService.updateUser(id, { status: "ALL_OK" });
     }
-    const response = await saveUserDocumentsServ({ id, DNI, address, bank })
-    res.json({ response })
+    const response = await UsersService.saveUserDocuments({ id, DNI, address, bank })
+    res.json({ response }) 
 };
