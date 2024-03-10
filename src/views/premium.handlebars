@@ -5,23 +5,20 @@ El rol actual de tu cuenta es: {{user.role}}<br>
 <div class="container text-center">
     <div class="row justify-content-md-center">
         <div class="col-md-auto">
-            <form id="changeRoleForm">
+            <form action="/api/users/premium/{{user._id}}" method="post"  id="Udatep-Rol-User">
                 <div class="col-md-auto">
-                    <label for="email" class="form-label">Rol:</label>
+                    <label class="form-label">Rol:</label>
                     <select class="form-select" aria-label="Default select example" id="role" name="role">
                         <option value="USER">USER</option>
                         <option value="PREMIUM">PREMIUM</option>
                     </select>
+                    <input type="hidden" name="_id" id="_id" value="{{user._id}}">
                     <div class="col-md-auto">
-                        <button class="btn btn-outline-warning" type="button" data-bs-toggle="offcanvas"
-                            data-bs-target="#Side_carrito" aria-controls="offcanvasRight"
-                            onclick="location.href='/api/users/{{user._id}}'">Cambiar Rol</button>
+                            <input class="btn btn-outline-warning" data-bs-toggle="offcanvas"
+                            data-bs-target="#Side_carrito" aria-controls="offcanvasRight" type="submit" value="Cambiar Rol">
                     </div>
-
                 </div>
             </form>
         </div>
     </div>
 </div>
-
-<script src="../public/js/premium.js"></script>

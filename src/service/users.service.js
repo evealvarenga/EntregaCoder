@@ -45,7 +45,6 @@ class UserService {
                 }] : []),
             ]
         }
-        console.log(obj);
         const saveDocs = usersManager.updateOne(id, obj);
         return saveDocs 
     }

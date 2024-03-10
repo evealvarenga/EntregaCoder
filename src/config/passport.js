@@ -19,9 +19,9 @@ passport.use("signup",
         async (req, email, password, done) => {
             try {
                 console.log(email);
-                const usermail = await findUserByEmail(email) 
-                if(usermail){
-                  return done(null, usermail)
+                const usermail = await findUserByEmail(email)
+                if (usermail) {
+                    return done(null, usermail)
                 }
                 const user = req.body
                 const createdUser = await createUser(user)
@@ -57,18 +57,30 @@ passport.use("login",
 //Passport JWT
 
 const fromCookies = (req) => {
-    if (!req.cookies.token) {
-        return console.log("ERROR")
-    }
-    return req.cookies.token
-}
+    let token = null;
+    if (req?.cookies) { token = req.cookies['token']; }
+    return token;
+};
 
 passport.use("current", new JWTSrategy(
     {
         jwtFromRequest: ExtractJwt.fromExtractors([fromCookies]),
         secretOrKey: SECRET_KEY_JWT
     },
-    (jwt_playload, done) => { done(null, jwt_playload) }
+    async (jwt_payload, done) => { 
+        //done(null, jwt_playload) 
+        try {
+            const user = await findUserByEmail(jwt_payload.email);
+            if (!user) {
+              return done(null, false);
+            }
+            if (user) {
+              return done(null, user);
+            }
+          } catch (error) {
+            return done(error, false);
+          }
+    }
 ))
 
 //Passport GitHub

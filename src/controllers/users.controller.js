@@ -1,7 +1,20 @@
 import { UsersService } from "../service/users.service.js"
 import { CustomError } from "../errors/errors.generator.js";
 import { errorsMessages } from "../errors/errors.enum.js";
+import { transporter } from "../utils/nodemailer.js"
+import { mongoose } from "mongoose";
+import { usersModel } from "../DAL/models/users.model.js";
+import UsersResponseDto from "../DAL/dtos/users.response.dto.js"
 
+export const findAllUser = async (req, res) => {
+    try {
+        const allUsers = await UsersService.findAll()
+        const usersMap = users.map(user => UsersResponseDto.fromModel(user))
+        res.status(200).json({ message: "Users:", usersMap });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
 
 export const findUserById = async (id) => {
     const user = await UsersService.findById(id);
@@ -32,28 +45,30 @@ export const createUser = async (user) => {
 };
 
 export const updateUser = async (req, res) => {
-    const { _id } = req.params;
-    const { role } = req.body;
-    
-
+    const { _id } = req.body;
+    const { role } = req.body 
     const userToUpdate = await UsersService.findById(_id);
+
     if (!userToUpdate) {
         return res.status(404).json({ message: "User not found" });
     }
-    try {
-        const control = userToUpdate.documents
-        const DNI = control.find((item) => item.name === 'DNI')
-        const address = control.find((item) => item.name === 'address')
-        const bank = control.find((item) => item.name === 'bank')
-        if (userToUpdate.role === "USER") {
-            if (!DNI || !address || !bank) {
-                return res.status(400).json({ message: "All documents are required" });
-            } else {
-                await UsersService.updateUser(_id, role);
-                return res.status(200).json({ message: "User update" });
-            }
+    try {       
+        if (userToUpdate.status === "NULL") {
+            return res.status(400).json({ message: "Todos los documentos son necesarios." });
+        } if (userToUpdate.status === "DNI_OK") {
+            return res.status(400).json({ message: "Faltan datos de dirección y banco." });
+        } if (userToUpdate.status === "BANK_OK") {
+            return res.status(400).json({ message: "Faltan datos de dirección y DNI." });
+        } if (userToUpdate.status === "ADDRESS_OK") {
+            return res.status(400).json({ message: "Faltan datos de banco y DNI." });
+        } if (userToUpdate.status === "DNI_ADDRESS_OK") {
+            return res.status(400).json({ message: "Faltan datos bancarios." });
+        } else {
+            const newRole = {role: role}
+            await UsersService.updateUser(_id, newRole);
+            return res.status(200).json({ message: "User update" });
         }
-        await UsersService.updateUser(_id, role);
+        await UsersService.updateUser(_id, newRole);
         res.status(200).json({ message: "User update" });
     }
     catch (error) {
@@ -61,10 +76,25 @@ export const updateUser = async (req, res) => {
     }
 }
 
+export const updateAdmin = async (req, res) => {
+    const { userId } = req.params;
+    const role = req.body
+    const userID = await UsersService.findById(userId)
+    if (!userID) {
+        return CustomError.generateError(errorsMessages.USER_NOT_FOUND, 404)
+    }
+    try {
+        await UsersService.updateUser(userId, role);
+        res.status(200).json({ message: "User update" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
 export const userDocuments = async (req, res) => {
     const { id } = await req.params
     const { DNI, address, bank } = await req.files
-   if (DNI && address) {
+    if (DNI && address) {
         UsersService.updateUser(id, { status: "DNI_ADDRESS_OK" });
     } else {
         return res.status(400).json({ message: "All fields are required" });
@@ -73,5 +103,26 @@ export const userDocuments = async (req, res) => {
         UsersService.updateUser(id, { status: "ALL_OK" });
     }
     const response = await UsersService.saveUserDocuments(id, DNI, address, bank)
-    res.json({ response }) 
+    res.json({ response })
 };
+
+export const deleteInactiveUsers = async (req, res) => {
+    const users = await findAllUserService()
+    let limitDate = new Date()
+    limitDate.setTime(limitDate.getTime() - (2 * 60 * 1000))
+    const activeUsers = users.filter(item => item.last_connection.getTime() >= limitDate.getTime())
+    const inactiveUsers = users.filter(item => item.last_connection.getTime() <= limitDate.getTime())
+    inactiveUsers.forEach(item => {
+        transporter.sendMail({
+            from: "CODER-ENTREGA",
+            to: item.email,
+            subject: "Tu cuenta ha sido eliminada",
+            html:
+                `<p>Debido a la inactividad en tu cuenta, hemos decidido eliminar la misma.</p>`
+        })
+    });
+    usersModel.deleteMany({ last_connection: { $lt: limitDate } }, (err) => {
+        if (err) return console.error(err);
+    });
+    return res.status(400).json({ message: "YEEEES", activeUsers });
+}

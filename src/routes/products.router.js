@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { findProductById, findAllProduct, createOneProduc, deleteOneProdAll, updateProducts, productMocksController } from "../controllers/products.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
+import { tokenValidation } from "../middlewares/jwt.middleware.js";
 import passport from "passport";
 
 //import { productManager } from "../db/manager/productManager.js";
@@ -9,9 +10,9 @@ const router = Router();
 
 router.get("/", findAllProduct)
 router.get("/:pid", findProductById)
-router.post("/", passport.authenticate("current",{session:false}), authMiddleware(["ADMIN", "PREMIUM"]), createOneProduc)
-router.delete("/:pid", passport.authenticate("current",{session:false}), authMiddleware(["ADMIN", "PREMIUM"]), deleteOneProdAll)
-router.put("/:pid", passport.authenticate("current",{session:false}), authMiddleware(["ADMIN", "PREMIUM"]), updateProducts)
+router.post("/", tokenValidation, authMiddleware(["ADMIN", "PREMIUM"]), createOneProduc)
+router.delete("/:pid", tokenValidation, authMiddleware(["ADMIN", "PREMIUM"]), deleteOneProdAll)
+router.put("/:pid", tokenValidation, authMiddleware(["ADMIN", "PREMIUM"]), updateProducts)
 router.get("/mock/mockingproducts", productMocksController)
 
 /*

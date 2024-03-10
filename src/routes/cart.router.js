@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { findCartById, findAllC, addProductCart, createOneCart, deleteOneProdCart, deleteOneCartAll, updateCartQuantity, cartBuy } from "../controllers/cart.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
+import { tokenValidation } from "../middlewares/jwt.middleware.js";
 
 const router = Router();
 
@@ -9,7 +10,7 @@ router.post("/", authMiddleware(["USER"]) ,createOneCart)
 router.get("/:cid", findCartById)
 router.get("/:cid/purchase", cartBuy)
 router.put("/:cid/products/:pid",authMiddleware(["USER"]) , updateCartQuantity)
-router.post("/:cid/products/:pid", addProductCart)
+router.post("/:cid/products/:pid", tokenValidation, addProductCart)
 router.delete("/:cid/products/:pid",authMiddleware(["USER"]) , deleteOneProdCart)
 router.delete("/:cid",authMiddleware(["USER"]) , deleteOneCartAll)
 

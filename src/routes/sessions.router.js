@@ -2,6 +2,7 @@ import { Router } from "express";
 import { usersManager } from "../DAL/daos/mongo/users.dao.js";
 import { UsersService } from "../service/users.service.js";
 import { hashData, generateToken, compareData } from "../utils/utils.js";
+import { tokenValidation, tokenMiddleware } from "../middlewares/jwt.middleware.js";
 import { transporter } from "../utils/nodemailer.js"
 import { CustomError } from "../errors/errors.generator.js";
 import { errorsMessages } from "../errors/errors.enum.js";
@@ -77,23 +78,10 @@ router.post("/signup",
     res.redirect("/api/views/products")
   });
 
-router.post("/login",
-  passport.authenticate("login",
-    { failureRedirect: "/api/views/error" }),
-  (req, res) => {
-    const { name, last_name, email } = req.user
-    const token = generateToken({
-      name,
-      last_name,
-      email
-    });
-    res.cookie("token", token, { maxAge: 60000, httpOnly: true })
-    res.redirect("/api/views/products")
-  });
+router.post("/login", passport.authenticate("login", { failureRedirect: "/api/views/error" }), tokenMiddleware, (req, res) => { res.redirect("/api/views/products") });
 
-router.get("/signout", async (req, res) => {
-  const { _id } = await req.user 
-  console.log(req.user);
+router.get("/signout", tokenValidation, async (req, res) => {
+  const { _id } = await req.user
   const lasco = new Date()
   UsersService.updateUser(_id, { last_connection: lasco });
   req.session.destroy(() => { res.redirect("/api/views/login") })
@@ -107,11 +95,8 @@ router.post("/restaurar", async (req, res) => {
   }
   try {
     //Verificación de usuario existente
-    console.log(email);
     const user = await usersManager.findByEmail(email);
-    console.log(user);
     if (user === null) {
-      console.log("here");
       return res.redirect("/api/views/signup");
     }
 
@@ -120,7 +105,6 @@ router.post("/restaurar", async (req, res) => {
     if (samePass) {
       return res.status(404).json({ error: 'No puedes ingresar una contraseña ya utilizada.' });
     }
-
     const deco = jwt.verify(token, SECRET_KEY_JWT);
     const timestamp = deco.iat;
     const currentTime = Math.floor(Date.now() / 1000);

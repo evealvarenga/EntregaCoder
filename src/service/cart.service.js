@@ -2,15 +2,18 @@ import { cartManager } from "../DAL/daos/mongo/carts.dao.js";
 
 
 export const findAllCart = () => {
-    return cartManager.findAllCart()
+    const response = cartManager.findAllCart()
+    return response
 }
 
 export const findById = (id) => {
-    return cartManager.findCartById(id)
+    const response = cartManager.findCartById(id)
+    return response
 }
 
 export const createOne = (obj) => {
-    return cartManager.createOneCart(obj)
+    const response = cartManager.createOneCart(obj)
+    return response
 }
 
 export const addProductToCart = async (cid, pid) => {
@@ -19,13 +22,16 @@ export const addProductToCart = async (cid, pid) => {
 }
 
 export const deleteOne = (cid, pid) => {
-    return cartManager.deleteProductToCart(cid, pid)
+    const response = cartManager.deleteProductToCart(cid, pid)
+    return response 
 }
 
 export const deleteAll = (cid) => {
-    return cartManager.deleteCartById(cid)
+    const response = cartManager.deleteCartById(cid)
+    return response
 }
 
 export const updateCart = (cid, pid, q) => {
-    return cartManager.addProductToCartQuantity(cid, pid, q)
+    const response = cartManager.addProductToCartQuantity(cid, pid, q)
+    return response
 }

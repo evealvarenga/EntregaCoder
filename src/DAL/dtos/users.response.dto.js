@@ -4,5 +4,9 @@ export default class UsersResponse {
         this.name = user.name.split(" ")[0];
         this.last_name = user.name.split(" ")[1];
         this.email = user.email;
+        this.role = user.role
+    }
+    static fromModel(user) {
+        return new UsersResponse(user);
     }
 }
