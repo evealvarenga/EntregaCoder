@@ -1,0 +1,54 @@
+<h1 class="text-center mt-5 mb-5">Usuarios</h1>
+<br>
+<center>
+    <form action="/api/users/deleteInactiveUsers" method="delete" id="deleteUser">
+        <input class="btn btn-outline-warning" data-bs-toggle="offcanvas" data-bs-target="#Side_carrito"
+            aria-controls="offcanvasRight" type="submit" value="Eliminar usuarios inactivos">
+    </form>
+</center>
+<br><br><br>
+<section class="container d-flex flex-wrap justify-content-center gap-5" id="main_container">
+    {{#each users}}
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title">{{name}}</h5>
+            <p class="card-text">{{name}}, {{last_name}}
+            </p>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Mail: {{email}}</li>
+            <li class="list-group-item">
+                <center>
+                    <form action="/api/users/premium/{{_id}}" method="post" id="Udatep-Rol-User">
+                        <div class="col-md-auto">
+                            <label class="form-label">Rol:</label>
+                            <select class="form-select" aria-label="Default select example" id="role" name="role">
+                                <option value="USER">USER</option>
+                                <option value="PREMIUM">PREMIUM</option>
+                                <option value="ADMIN">ADMIN</option>
+                            </select>
+                            <br>
+                            <input type="hidden" name="_id" id="_id" value="{{_id}}">
+                            <div class="col-md-auto">
+                                <input class="btn btn-outline-warning" data-bs-toggle="offcanvas"
+                                    data-bs-target="#Side_carrito" aria-controls="offcanvasRight" type="submit"
+                                    value="Cambiar Rol">
+                            </div>
+                        </div>
+                        <br>
+                    </form>
+                    <form action="/api/users/delete/{{_id}}" method="post" id="Udatep-Rol-User">
+                    <input type="hidden" name="_id" id="_id" value="{{_id}}">
+                        <input class="btn btn-outline-warning" data-bs-toggle="offcanvas" data-bs-target="#Side_carrito"
+                            aria-controls="offcanvasRight" type="submit" value="Eliminar user">
+                    </form>
+                </center>
+            </li>
+        </ul>
+    </div>
+    {{/each}}
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script src="../public/js/index.js"></script>

@@ -1,6 +1,6 @@
 export default class UsersResponse {
     constructor(user) {
-        this.id = user.id;
+        this._id = user._id;
         this.name = user.name.split(" ")[0];
         this.last_name = user.name.split(" ")[1];
         this.email = user.email;

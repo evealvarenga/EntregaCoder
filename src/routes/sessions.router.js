@@ -76,7 +76,7 @@ router.post("/signup",
     const role = email === "adminCoder@coder.com" ? "ADMIN" : "USER"
     req.session.user = { email, name, last_name, cart: null, role }
     res.redirect("/api/views/products")
-  });
+});
 
 router.post("/login", passport.authenticate("login", { failureRedirect: "/api/views/error" }), tokenMiddleware, (req, res) => { res.redirect("/api/views/products") });
 
@@ -134,7 +134,7 @@ router.get("/callback",
     const admin = email === "adminCoder@coder.com" ? true : false
     req.session.user = { email, name, last_name, cart: null, admin }
     res.redirect("/api/views/products")
-  });
+});
 
 router.post("/recover", async (req, res) => {
   const { email } = req.body;

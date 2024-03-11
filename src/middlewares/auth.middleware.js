@@ -1,10 +1,11 @@
 export const authMiddleware = (roles) => {
-    return (req, res, next) => {
-        const {user} = req
-        if (roles.includes(req.user.role)) {
+    return async(req, res, next) => {
+        const user = await req.user
+        const rol = user.role
+        if (roles.includes(rol)) {
             return next();
         }
-        if (!roles.includes(req.user.role)) {
+        if (!roles.includes(rol)) {
             return res.status(403).json("Not authorized");
         }
         next();

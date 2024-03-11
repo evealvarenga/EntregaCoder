@@ -10,9 +10,9 @@ export const findAllUser = async (req, res) => {
     try {
         const allUsers = await UsersService.findAll()
         const usersMap = allUsers.map(user => UsersResponseDto.fromModel(user))
-        res.status(200).json({ message: "Users:", usersMap });
+        return usersMap
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: error.message });
     }
 }
 
@@ -46,13 +46,13 @@ export const createUser = async (user) => {
 
 export const updateUser = async (req, res, next) => {
     const { _id } = req.body;
-    const { role } = req.body 
+    const { role } = req.body
     const userToUpdate = await UsersService.findById(_id);
 
     if (!userToUpdate) {
         return res.status(404).json({ message: "User not found" });
     }
-    try {       
+    try {
         if (userToUpdate.status === "NULL") {
             return res.status(400).json({ message: "Todos los documentos son necesarios." });
         } if (userToUpdate.status === "DNI_OK") {
@@ -64,7 +64,7 @@ export const updateUser = async (req, res, next) => {
         } if (userToUpdate.status === "DNI_ADDRESS_OK") {
             return res.status(400).json({ message: "Faltan datos bancarios." });
         } else {
-            const newRole = {role: role}
+            const newRole = { role: role }
             await UsersService.updateUser(_id, newRole);
             return res.status(200).json({ message: "Usuario modificado" })
         }
@@ -109,5 +109,13 @@ export const deleteInactiveUsers = async (req, res) => {
     usersModel.deleteMany({ last_connection: { $lt: limitDate } }, (err) => {
         if (err) return console.error(err);
     });
-    return res.status(400).json({ message: "YEEEES", activeUsers });
+    return res.status(400).json({ message: "Usuarios activos: ", activeUsers });
+}
+
+export const deleteUser = async (req, res) => {
+    console.log("user: ", await req.body);
+    const { _id } = await req.body;
+    console.log(_id);
+    await UsersService.deleteUser(_id);
+    return res.status(200).json({ message: "Usuario eliminado" });
 }

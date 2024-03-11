@@ -1,27 +1,45 @@
 <h3>Hola, {{user.name}}</h3>
 <div style="align: center; width: 500px">
-    <b>Email: {{user.email}} </b> <br>
-    <b>Tipo de usuario: {{user.role}} </b>
+  <b>Email: {{user.email}} </b> <br>
+  <b>Tipo de usuario: {{user.role}} </b>
 </div>
-  <div class="container text-center">
-    <div class="row justify-content-md-center">
-      <div class="col-md-auto">
-        <a href="#" onclick="location.href='/api/views/products'" class="sessionButton"><button class="btn btn-outline-warning" type="button" data-bs-toggle="offcanvas" aria-controls="offcanvasRight">Ver Productos</button></a>
-      </div>
-      <div class="col-md-auto">
-        <a href="#" onclick="location.href='/api/views/premium'" class="sessionButton"><button class="btn btn-outline-warning" type="button" data-bs-toggle="offcanvas" aria-controls="offcanvasRight">Premium</button></a>
-      </div>
-      <div class="col-md-auto">
-        <a href="#" onclick="location.href='/api/views/createProduct'" class="sessionButton"><button class="btn btn-outline-warning" type="button" data-bs-toggle="offcanvas" aria-controls="offcanvasRight">Crear nuevo producto</button></a>
-      </div>
-            <div class="col-md-auto">
-        <a href="#" onclick="location.href='/api/views/documents'" class="sessionButton"><button class="btn btn-outline-warning" type="button" data-bs-toggle="offcanvas" aria-controls="offcanvasRight">Cargar documentos</button></a>
-      </div>
-    </div>
-    <br><br><br>
+<div class="container text-center">
+  <div class="row justify-content-md-center">
     <div class="col-md-auto">
-        <a href="#" onclick="location.href='/api/sessions/signout'" class="sessionButton">
-        <button class="btn btn-outline-warning" type="button" data-bs-toggle="offcanvas" aria-controls="offcanvasRight">Cerrar sesión</button>
-        </a>
-      </div>
+      <a href="#" onclick="location.href='/api/views/products'" class="sessionButton"><button
+          class="btn btn-outline-warning" type="button" data-bs-toggle="offcanvas" aria-controls="offcanvasRight">Ver
+          Productos</button></a>
+    </div>
+    <div class="col-md-auto">
+      <a href="#" onclick="location.href='/api/views/premium'" class="sessionButton"><button
+          class="btn btn-outline-warning" type="button" data-bs-toggle="offcanvas"
+          aria-controls="offcanvasRight">Cambiar rol</button></a>
+    </div>
+    <div class="col-md-auto">
+      <a href="#" onclick="location.href='/api/views/createProduct'" class="sessionButton"><button
+          class="btn btn-outline-warning" type="button" data-bs-toggle="offcanvas" aria-controls="offcanvasRight">Crear
+          nuevo producto</button></a>
+    </div>
+    <div class="col-md-auto">
+      <a href="#" onclick="location.href='/api/views/documents'" class="sessionButton"><button
+          class="btn btn-outline-warning" type="button" data-bs-toggle="offcanvas" aria-controls="offcanvasRight">Cargar
+          documentos</button></a>
+    </div>
   </div>
+  {{#if adminRole}}
+  <br><br><br>
+  <div class="col-md-auto">
+    <a href="#" onclick="location.href='/api/views/usersAll'" class="sessionButton">
+      <button class="btn btn-outline-warning" type="button" data-bs-toggle="offcanvas"
+        aria-controls="offcanvasRight">Ver todos los usuarios</button>
+    </a>
+  </div>
+  {{/if}}
+  <br><br><br>
+  <div class="col-md-auto">
+    <a href="#" onclick="location.href='/api/sessions/signout'" class="sessionButton">
+      <button class="btn btn-outline-warning" type="button" data-bs-toggle="offcanvas"
+        aria-controls="offcanvasRight">Cerrar sesión</button>
+    </a>
+  </div>
+</div>

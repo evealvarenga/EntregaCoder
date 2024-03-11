@@ -51,8 +51,15 @@ class UserService {
             ]
         }
         const saveDocs = usersManager.updateOne(id, obj);
-        return saveDocs 
+        return saveDocs
+    }
+
+    async deleteUser(id) {
+        const response = usersManager.deleteOne(id);
+        return response
     }
 }
+
+
 
 export const UsersService = new UserService()

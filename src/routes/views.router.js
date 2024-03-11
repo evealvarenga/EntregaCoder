@@ -1,8 +1,10 @@
 import { Router } from "express";
 import { productManager } from "../DAL/daos/mongo/products.dao.js";
+import { findAllUser } from "../controllers/users.controller.js";
 import { cartManager } from "../DAL/daos/mongo/carts.dao.js"
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 import { logger } from "../utils/logger.js";
+import { usersModel } from "../DAL/models/users.model.js";
 
 const router = Router();
 
@@ -21,7 +23,8 @@ router.get("/realtimeproducts", async (req, res) => {
 });
 
 router.get("/chat", authMiddleware(["USER"]), async (req, res) => {
-  res.render("chat");
+  let { name } = await req.user
+  res.render("chat",{user: { name }});
 });
 
 router.get("/products", async (req, res) => {
@@ -72,7 +75,12 @@ router.get("/profile", async (req, res) => {
     return res.redirect("api/views/login");
   }
   const { name, email, role } = await req.user;
-  res.render("profile", { user: { name, email, role } });
+  if(role === "ADMIN"){
+    const adminRole = true 
+    res.render("profile", { user: { name, email, role }, adminRole });
+  } else{
+    res.render("profile", { user: { name, email, role } });
+  }
 });
 
 router.get("/documents", async (req, res) => {
@@ -134,6 +142,19 @@ router.get("/product/:pid", async (req, res) => {
   } catch (error) {
     res.status(500).send('Error interno del servidor');
   }
+})
+
+router.get("/usersAll", async (req, res) => {
+  if (!req.session.passport) {
+    return res.redirect("/api/views/login")
+  }
+  let users = await findAllUser()
+  const clonedUsers = users.map(user => Object.assign(user));
+  let { name, role } = await req.user
+  res.render("usersAll", {
+    users: clonedUsers,
+    user: { name, role },
+  });
 })
 
 
