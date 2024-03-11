@@ -39,19 +39,18 @@ router.get("/products", async (req, res) => {
 });
 
 router.get("/carts/:cartId", async (req, res) => {
-  const { cartId } = req.params
+  const {name, cart} = await req.user
   try {
-    let cart = await cartManager.findCartById(cartId);
-    if (!cart) {
+    const cartID = await cartManager.findCartById(cart);
+    if (!cartID) {
       return res.status(404).send('Carrito no encontrado')
     }
-    let cartArray = cart.products;
-    const cartArrayObject = cartArray.map(doc => doc.toObject());
-    let { name } = await req.user
-    res.render("cart", {
+    const cartArray = cartID.products.map(doc => doc.toObject());
+    res.render('cart', {  user: { name }, cart : cart, products:cartArray })
+    /*res.render("cart", {
       cartData: cartArrayObject,
       user: { name },
-    });
+    });*/
   } catch (error) {
     res.status(500).send('Error interno')
   }
@@ -94,7 +93,7 @@ router.get("/error", async (req, res) => {
 
 router.get("/restaurar", (req, res) => {
   const { token } = req.query;
-  res.render("restaurar", {  token: token });
+  res.render("restaurar", { token: token });
 })
 
 router.get("/loggerTest", async (req, res) => {
@@ -117,10 +116,28 @@ router.get("/premium", async (req, res) => {
   res.render("premium", { user: { name, role, _id } });
 })
 
-router.get ("/createProduct", authMiddleware(["ADMIN", "PREMIUM"]), async (req, res) => {
+router.get("/createProduct", authMiddleware(["ADMIN", "PREMIUM"]), async (req, res) => {
   const { name, role, _id } = await req.user;
   res.render("createProducts", { user: { name, role, _id } });
 })
-  
+
+router.get("/product/:pid", async (req, res) => {
+  const { pid } = req.params;
+  const { name, cart } = await req.user;
+  try {
+    const product = await productManager.getById(pid);
+    if (!product) {
+      return res.status(404).send('Producto no encontrado');
+    }
+    const clonedProduct = Object.assign({}, product);
+    res.render("product", {
+      product: clonedProduct,
+      user: { name, cart },
+    });
+  } catch (error) {
+    res.status(500).send('Error interno del servidor');
+  }
+})
+
 
 export default router;

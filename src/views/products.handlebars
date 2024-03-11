@@ -1,28 +1,30 @@
- <h1 class="text-center mt-5 mb-5">Productos</h1>
-  <section class="container d-flex flex-wrap justify-content-center gap-5" id="main_container">
-    {{#if user}}
-    <div class="container text-center">
-    <a href="#" onclick="location.href='/api/views/carts/{{user.cart}}'" class="sessionButton"><button class="btn btn-outline-warning" type="button" data-bs-toggle="offcanvas" aria-controls="offcanvasRight">Carrito</button></a>
+<h1 class="text-center mt-5 mb-5">Productos</h1>
+<section class="container d-flex flex-wrap justify-content-center gap-5" id="main_container">
+  {{#if user}}
+  <div class="container text-center">
+    <a href="#" onclick="location.href='/api/views/carts/{{user.cart}}'" class="sessionButton"><button
+        class="btn btn-outline-warning" type="button" data-bs-toggle="offcanvas"
+        aria-controls="offcanvasRight">Carrito</button></a>
+  </div>
+  {{/if}}
+  {{#each productsData}}
+  <div class="card" style="width: 18rem;">
+    <img src="https://celutronic.com/wp-content/uploads/2023/10/ASSET_MMS_118147784-462x582.jpeg" class="card-img-top" alt="...">
+    <div class="card-body">
+      <h5 class="card-title">{{title}}</h5>
+      <p class="card-text">{{description}}
+      </p>
     </div>
-    {{/if}}
-    {{#each productsData}}
-    <div class="card" style="width: 18rem;">
-      <img src="{{thumbnail}}" class="card-img-top" alt="...">
-      <div class="card-body">
-        <h5 class="card-title">{{title}}</h5>
-        <p class="card-text">{{description}}
-        </p>
-      </div>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item">Precio: ${{price}}</li>
-        <li class="list-group-item">
-          <center>
-            <a href="#" onclick="addProductToCart('{{../user.cart}}','{{_id}}')" class="sessionButton"><botton class="btn btn-outline-warning" data-product-id="{{_id}}">Comprar</botton></a>
-          </center>
-        </li>
-      </ul>
-    </div>
-    {{/each}}
-  </section>
-
-  <script src="../public/js/cart.js"></script>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">Precio: ${{price}}</li>
+      <li class="list-group-item">
+        <center>
+          <a href="#" onclick="location.href='/api/views/product/{{_id}}'" class="sessionButton">
+            <botton class="btn btn-outline-warning">Ver más detalles</botton>
+          </a>
+        </center>
+      </li>
+    </ul>
+  </div>
+  {{/each}}
+</section>

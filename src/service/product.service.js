@@ -13,7 +13,7 @@ class ProductService{
     }
 
     async findById(id){
-        return productManager.findById(id);
+        return productManager.getById(id);
     }
 
     async createOne(obj){

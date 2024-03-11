@@ -1,0 +1,46 @@
+{{#if user}}
+<div class="container text-center">
+    <a href="#" onclick="location.href='/api/views/carts/{{user.cart}}'" class="sessionButton"><button
+            class="btn btn-outline-warning" type="button" data-bs-toggle="offcanvas"
+            aria-controls="offcanvasRight">Carrito</button></a>
+</div>
+{{/if}}
+
+<div class="product-card">
+    <img src="{{product._doc.thumbail}}" alt="{{product._doc.title}}">
+    <button class="boton">Add to Cart</button>
+
+</div>
+
+<center>
+    <div class="card mb-3" style="max-width: 940px;">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src="https://celutronic.com/wp-content/uploads/2023/10/ASSET_MMS_118147784-462x582.jpeg"
+                    class="img-fluid rounded-start" alt="...">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">{{product._doc.title}}</h5>
+                    <p class="card-text">{{product._doc.description}}</p>
+                    <p class="card-text">Precio: ${{product._doc.price}}</p>
+                    <p class="card-text">Stock:{{product._doc.stock}}</p>
+
+                </div>
+                <div>
+                    <form action="/api/carts/{{user.cart}}/products/{{product._doc._id}}" method="post"
+                        id="buyProduct">
+                        <input type="hidden" id="pid" value="{{ product._doc._id }}">
+                        <input class="btn btn-outline-warning" data-bs-toggle="offcanvas" data-bs-target="#Side_carrito"
+                            aria-controls="offcanvasRight" type="submit" value="Agregar al carrito">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="#" onclick="location.href='/api/views/products'" class="sessionButton"><button
+            class="btn btn-outline-warning" type="button" data-bs-toggle="offcanvas"
+            aria-controls="offcanvasRight">Volver</button></a>
+</center>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
