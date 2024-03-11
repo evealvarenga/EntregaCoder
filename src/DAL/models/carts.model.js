@@ -14,7 +14,11 @@ const cartsSchema = new Schema({
       },
       _id: false
     }
-  ]
+  ],
+  subtotal: {
+    type: Number,
+    default: 0
+  }
 });
 
 const cartsModel = model("Carts", cartsSchema);

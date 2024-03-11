@@ -46,30 +46,37 @@ export const createOneCart = async (req, res) => {
 
 export const addProductCart = async (req, res) => {
     const { cid, pid } = req.params;
+    const quantity = 1
     try {
         const cartstatus = await findById(cid)
         if (!cartstatus) {
             return CustomError.generateError(errorsMessages.CART_NOT_FOUND, 404)
         }
-        if (req.user.role === "PREMIUM") {
+        if ((await req.user.role) === "PREMIUM" || (await req.user.role) === "ADMIN") {
             const product = await productService.findById(pid)
-            if (product.owner === req.user.email) {
+            if (product.owner === (await req.user.email)) {
                 return res.status(404).json({ message: "No puedes agregar tus propios productos." });
             }
-            const response = await addProductToCart(cid, pid);
-            res.status(200).json({ message: "Product added to cart", cart: response });
+            if (product.stock >= quantity) {       
+                const subtotal = product.price + cartstatus.subtotal
+                const stotal = await cartManager.updateTotal(cid, subtotal)         
+                const response = await addProductToCart(cid, pid);
+                res.status(200).json({ message: "Product added to cart", cart: response });
+            } else {
+                res.status(500).json({ message: "Item no disponible en stock" });
+            }
         }
     } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal server error" });
-}
+        console.error(error);
+        res.status(500).json({ message: "Internal server error" });
+    }
 }
 
 export const deleteOneProdCart = async (req, res) => {
     const { cid, pid } = req.params;
     try {
         const cartStatus = findById(cid)
-        if(!cartStatus){
+        if (!cartStatus) {
             return CustomError.generateError(errorsMessages.CART_NOT_FOUND, 404)
         }
         const response = await deleteOne(cid, pid);
@@ -161,13 +168,13 @@ export const updateCartC = async (req, res) => {
     const { cid } = req.params;
     const { pid } = req.body;
     try {
-      const cart = await findById(cid)
-      if (!cart) {
-        return CustomError.generateError(errorsMessages.CART_NOT_FOUND, 404)
-      }
-      const updatedCart = await updateCart(cid, pid);
-      res.status(200).json({ message: "Updated succesfull" });
+        const cart = await findById(cid)
+        if (!cart) {
+            return CustomError.generateError(errorsMessages.CART_NOT_FOUND, 404)
+        }
+        const updatedCart = await updateCart(cid, pid);
+        res.status(200).json({ message: "Updated succesfull" });
     } catch (error) {
-      res.status(500).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
-  }
+}

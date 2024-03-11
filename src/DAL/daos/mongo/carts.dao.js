@@ -31,7 +31,7 @@ class CartManager extends BasicMongo{
 
     };
 
-    async addProductToCartQuantity(idC, idP, quantity) {
+    async addProductToCartQuantity(idC, idP, qa) {
         const cart = await cartsModel.findById(idC);
         const productIndex = cart.products.findIndex(
             (item) => item.product.equals(idP)
@@ -41,6 +41,13 @@ class CartManager extends BasicMongo{
         } else {
             cart.products.push({ product: idP, quantity: 1 });
         }
+        return cart.save()
+    };
+
+    async updateTotal(idC, obj) {
+        const cart = await cartsModel.findById(idC);
+        const newTotal = obj;
+        cart.subtotal = newTotal;
         return cart.save()
     };
 

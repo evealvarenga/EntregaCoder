@@ -14,7 +14,7 @@ router.post("/:cid/products/:pid", tokenValidation, addProductCart)
 router.delete("/:cid/products/:pid",authMiddleware(["USER"]) , deleteOneProdCart)
 router.delete("/:cid",authMiddleware(["USER"]) , deleteOneCartAll)
 
-
+ 
 /* router.get("/", async (req, res) => {
 
   try {

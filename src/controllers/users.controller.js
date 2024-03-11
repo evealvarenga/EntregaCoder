@@ -9,7 +9,7 @@ import UsersResponseDto from "../DAL/dtos/users.response.dto.js"
 export const findAllUser = async (req, res) => {
     try {
         const allUsers = await UsersService.findAll()
-        const usersMap = users.map(user => UsersResponseDto.fromModel(user))
+        const usersMap = allUsers.map(user => UsersResponseDto.fromModel(user))
         res.status(200).json({ message: "Users:", usersMap });
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -44,7 +44,7 @@ export const createUser = async (user) => {
     return createdUser;
 };
 
-export const updateUser = async (req, res) => {
+export const updateUser = async (req, res, next) => {
     const { _id } = req.body;
     const { role } = req.body 
     const userToUpdate = await UsersService.findById(_id);
@@ -66,27 +66,12 @@ export const updateUser = async (req, res) => {
         } else {
             const newRole = {role: role}
             await UsersService.updateUser(_id, newRole);
-            return res.status(200).json({ message: "User update" });
+            return res.status(200).json({ message: "Usuario modificado" })
         }
         await UsersService.updateUser(_id, newRole);
-        res.status(200).json({ message: "User update" });
+        return res.status(200).json({ message: "Usuario modificado" })
     }
     catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-}
-
-export const updateAdmin = async (req, res) => {
-    const { userId } = req.params;
-    const role = req.body
-    const userID = await UsersService.findById(userId)
-    if (!userID) {
-        return CustomError.generateError(errorsMessages.USER_NOT_FOUND, 404)
-    }
-    try {
-        await UsersService.updateUser(userId, role);
-        res.status(200).json({ message: "User update" });
-    } catch (error) {
         res.status(500).json({ message: error.message });
     }
 }
@@ -107,7 +92,7 @@ export const userDocuments = async (req, res) => {
 };
 
 export const deleteInactiveUsers = async (req, res) => {
-    const users = await findAllUserService()
+    const users = await UsersService.findAll()
     let limitDate = new Date()
     limitDate.setTime(limitDate.getTime() - (2 * 60 * 1000))
     const activeUsers = users.filter(item => item.last_connection.getTime() >= limitDate.getTime())

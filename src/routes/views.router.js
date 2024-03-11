@@ -45,12 +45,9 @@ router.get("/carts/:cartId", async (req, res) => {
     if (!cartID) {
       return res.status(404).send('Carrito no encontrado')
     }
+    const cartSubtotal = cartID.subtotal
     const cartArray = cartID.products.map(doc => doc.toObject());
-    res.render('cart', {  user: { name }, cart : cart, products:cartArray })
-    /*res.render("cart", {
-      cartData: cartArrayObject,
-      user: { name },
-    });*/
+    res.render('cart', {  user: { name }, cart : cart, subtotal:cartSubtotal, products:cartArray })
   } catch (error) {
     res.status(500).send('Error interno')
   }

@@ -4,6 +4,11 @@ import { cartsModel } from "../DAL/models/carts.model.js";
 
 
 class UserService {
+    async findAll() {
+        const users = usersManager.getAll()
+        return users
+    }
+
     async findById(id) {
         const user = await usersManager.getById(id);
         return user;

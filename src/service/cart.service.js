@@ -1,4 +1,5 @@
 import { cartManager } from "../DAL/daos/mongo/carts.dao.js";
+import { productService } from "./product.service.js";
 
 
 export const findAllCart = () => {
@@ -17,6 +18,10 @@ export const createOne = (obj) => {
 }
 
 export const addProductToCart = async (cid, pid) => {
+    /*const product = await productService.findById(pid)
+    const cartstatus = await findById(cid)
+    const total = product.price + cartstatus.subtotal
+    const stotal = await cartManager.updateTotal(cid, total)*/
     const response = await cartManager.addProductToCart(cid, pid)
     return response
 }
