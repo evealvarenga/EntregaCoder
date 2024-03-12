@@ -31,10 +31,10 @@ export const findticketByEmail = async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 };
-export const createOneTicket = async (req, res) => {
+export const createOneTicket = async (obj) => {
     try {
         const ticket = await createOne(obj)
-        res.status(201).json({ message: "Ticket created", ticket });
+        return ticket
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal server error" });

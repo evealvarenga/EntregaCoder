@@ -1,4 +1,4 @@
-import { findAllCart, findById, createOne, addProductToCart, deleteOne, deleteAll, updateCart } from "../service/cart.service.js";
+import { findAllCart, findById, createOne, addProductToCart, deleteOne, deleteAll, updateCart, clearCart } from "../service/cart.service.js";
 import { productService } from "../service/product.service.js";
 import { cartManager } from "../DAL/daos/mongo/carts.dao.js";
 import { createOneTicket } from "./ticket.controller.js";
@@ -7,6 +7,9 @@ import { CustomError } from "../errors/errors.generator.js";
 import { errorsMessages } from "../errors/errors.enum.js";
 import config from "../config/config.js"
 import { findProductById } from "./products.controller.js";
+import { logger } from "../utils/logger.js";
+import { generateUniqueCode } from "../utils/utils.js";
+
 
 export const findCartById = async (req, res) => {
     const { cid } = req.params
@@ -57,9 +60,9 @@ export const addProductCart = async (req, res) => {
             if (product.owner === (await req.user.email)) {
                 return res.status(404).json({ message: "No puedes agregar tus propios productos." });
             }
-            if (product.stock >= quantity) {       
+            if (product.stock >= quantity) {
                 const subtotal = product.price + cartstatus.subtotal
-                const stotal = await cartManager.updateTotal(cid, subtotal)         
+                const stotal = await cartManager.updateTotal(cid, subtotal)
                 const response = await addProductToCart(cid, pid);
                 res.status(200).json({ message: "Product added to cart", cart: response });
             } else {
@@ -118,46 +121,42 @@ export const updateCartQuantity = async (req, res) => {
     }
 }
 
-export const cartBuy = async (req, res) => {
+export const cartBuy = async (cid, email) => {
     try {
-        const { cid } = req.params;
-        const secret_jwt = config.secret_jwt
-        const cart = await cartManager.findCartById(cid);
+        const cart = await findById(cid);
         const products = cart.products;
-        let availableProducts = [];
-        let unavailableProducts = [];
-        let totalAmount = 0;
-
+        let disponibles = [];
+        let noDisponibles = [];
         for (let item of products) {
-            if (item.product.stock >= item.quantity) {
+            const pid = item.product._id
+            const product = await productService.findById(pid)
+            if (product.stock >= item.quantity) {
                 // Disponible
-                availableProducts.push(item);
-                item.product.stock -= item.quantity;
-                await item.product.save();
-                totalAmount += item.quantity * item.product.price;
+                disponibles.push(item);
+                const newStock = product.stock -= item.quantity
+                const obj = { stock: newStock }
+                await productService.updateProduct(pid,obj)
             } else {
                 //No disponible
-                unavailableProducts.push(item);
+                noDisponibles.push(item);
             }
         }
-        logger.info("Productos disponibles", availableProducts, "Productos no disponibles", unavailableProducts);
-        cart.products = unavailableProducts;
-        await cart.save();
-        const token = req.cookie.token
-        const userToken = jwt.verify(token, secret_jwt);
-        logger.info("userticket", userToken);
-        if (availableProducts.length) {
+
+        logger.info("Productos disponibles", disponibles, "Productos no disponibles", noDisponibles);
+        const total = cart.subtotal
+        if (disponibles.length) {
             const ticket = {
                 code: generateUniqueCode(),
-                purchase_datetime: new Date(),
-                amount: totalAmount,
-                purchaser: userToken.email,
+                purchase_datatime: new Date(),
+                amount: total,
+                purchaser: email,
             };
-            logger.info("ticket", ticket);
+            logger.info("Ticket", ticket);
             const finalTicket = await createOneTicket(ticket);
-            return { availableProducts, totalAmount, finalTicket };
+            await clearCart(cart)
+            return { disponibles, total, finalTicket };
         }
-        return { unavailableProducts };
+        return { noDisponibles };
     } catch (error) {
         logger.error(error)
         res.status(500).json({ error: 'Error interno del servidor' });

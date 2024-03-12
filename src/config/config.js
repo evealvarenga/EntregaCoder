@@ -9,7 +9,8 @@ const obj = {
     github_client_secret: process.env.GITHUB_CLIENT_SECRET,
     nodemailer_user: process.env.NODEMAILER_USER,
     nodemailer_password: process.env.NODEMAILER_PASSWORD,
-    environment: process.env.ENVIRONMENT
+    environment: process.env.ENVIRONMENT,
+    stripe_secrey_key : process.env.STRIPE_SECRET_KEY
 };
 
 export default obj;

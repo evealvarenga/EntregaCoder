@@ -18,10 +18,6 @@ export const createOne = (obj) => {
 }
 
 export const addProductToCart = async (cid, pid) => {
-    /*const product = await productService.findById(pid)
-    const cartstatus = await findById(cid)
-    const total = product.price + cartstatus.subtotal
-    const stotal = await cartManager.updateTotal(cid, total)*/
     const response = await cartManager.addProductToCart(cid, pid)
     return response
 }
@@ -39,4 +35,10 @@ export const deleteAll = (cid) => {
 export const updateCart = (cid, pid, q) => {
     const response = cartManager.addProductToCartQuantity(cid, pid, q)
     return response
+}
+
+export const clearCart = (cart) => {
+    cart.products = [];
+    cart.subtotal = 0
+    return cart.save();
 }

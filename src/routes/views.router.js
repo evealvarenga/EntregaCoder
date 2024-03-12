@@ -1,10 +1,14 @@
 import { Router } from "express";
+
 import { productManager } from "../DAL/daos/mongo/products.dao.js";
 import { findAllUser } from "../controllers/users.controller.js";
 import { cartManager } from "../DAL/daos/mongo/carts.dao.js"
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 import { logger } from "../utils/logger.js";
 import { usersModel } from "../DAL/models/users.model.js";
+import config from "../config/config.js"
+import { ticketController } from "../DAL/daos/mongo/ticket.dao.js";
+import { cartBuy } from "../controllers/cart.controller.js";
 
 const router = Router();
 
@@ -91,7 +95,6 @@ router.get("/documents", async (req, res) => {
   res.render("documents", { user: { name, email, _id } });
 });
 
-
 router.get("/error", async (req, res) => {
   res.render("error")
 });
@@ -116,9 +119,9 @@ router.get("/recoverMail", async (req, res) => {
   res.render("recover")
 });
 
-router.get("/premium", async (req, res) => {
+router.get("/role", async (req, res) => {
   const { name, role, _id } = await req.user;
-  res.render("premium", { user: { name, role, _id } });
+  res.render("role", { user: { name, role, _id } });
 })
 
 router.get("/createProduct", authMiddleware(["ADMIN", "PREMIUM"]), async (req, res) => {
@@ -156,6 +159,15 @@ router.get("/usersAll", async (req, res) => {
     user: { name, role },
   });
 })
+
+router.get('/purchase', async (req, res) => {
+  try {
+      const { name, cart, email } = await req.user;
+      const ticket = await cartBuy(cart, email);
+      res.render ("payment",{ user: name, comprador : ticket.finalTicket.purchaser, code : ticket.finalTicket.code});
+  } catch (error) {
+      res.status(500).send('Error interno del servidor');
+  }});
 
 
 export default router;
